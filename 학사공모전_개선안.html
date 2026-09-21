@@ -227,7 +227,7 @@
   <p>
     학사 문의는 행정실이 열린 시간에만 생기지 않습니다. <b>수강신청 전날 밤, 정정 기간 마지막 날 밤,
     휴학 여부를 고민하는 새벽</b>처럼 운영시간 밖에도 계속 생기고, 기한을 앞둔 결정일수록 더 그렇습니다.
-    그런데 답할 수 있는 창구는 <b>평일 낮에만</b> 열려 있습니다.
+    그런데 학사운영팀은 <b>평일 09:00–17:30</b>(점심 12–13시 제외)에만 운영되고 <b>주말·공휴일은 휴무</b>입니다.
   </p>
 
   <svg viewBox="0 0 640 178" style="width:100%;margin:3mm 0 1mm">
@@ -238,24 +238,28 @@
       <text x="30" y="122">0시</text><text x="177" y="122">6시</text>
       <text x="325" y="122">12시</text><text x="472" y="122">18시</text><text x="618" y="122">24시</text>
     </g>
-    <!-- 운영시간 막대 -->
-    <rect x="251" y="34" width="196" height="20" rx="4" fill="#1a4fd6"/>
-    <text x="349" y="48" font-size="9" fill="#fff" text-anchor="middle" font-family="Malgun Gothic" font-weight="bold">행정실 운영 09–18시</text>
-    <text x="30" y="48" font-size="9" fill="#9aa7bd" font-family="Malgun Gothic">응답 가능</text>
     <!-- 닫힌 구간 -->
-    <rect x="30" y="34" width="221" height="20" rx="4" fill="#f0f2f7"/>
-    <rect x="447" y="34" width="173" height="20" rx="4" fill="#f0f2f7"/>
-    <text x="140" y="48" font-size="8.5" fill="#97a3b8" text-anchor="middle" font-family="Malgun Gothic">닫힘</text>
-    <text x="533" y="48" font-size="8.5" fill="#97a3b8" text-anchor="middle" font-family="Malgun Gothic">닫힘</text>
+    <rect x="30.0" y="34" width="221.25" height="20" rx="4" fill="#f0f2f7"/>
+    <rect x="460.21" y="34" width="159.79" height="20" rx="4" fill="#f0f2f7"/>
+    <text x="140.625" y="48" font-size="8.5" fill="#97a3b8" text-anchor="middle" font-family="Malgun Gothic">닫힘</text>
+    <text x="540.11" y="48" font-size="8.5" fill="#97a3b8" text-anchor="middle" font-family="Malgun Gothic">닫힘</text>
+    <!-- 운영시간 (점심 12–13 제외) -->
+    <rect x="251.25" y="34" width="73.75" height="20" rx="4" fill="#1a4fd6"/>
+    <rect x="349.58" y="34" width="110.63" height="20" rx="4" fill="#1a4fd6"/>
+    <text x="288.125" y="48" font-size="8.5" fill="#fff" text-anchor="middle" font-family="Malgun Gothic" font-weight="bold">운영 09–12</text>
+    <text x="404.89" y="48" font-size="8.5" fill="#fff" text-anchor="middle" font-family="Malgun Gothic" font-weight="bold">운영 13–17:30</text>
+    <rect x="325.0" y="34" width="24.579999999999984" height="20" fill="#f0f2f7"/>
+    <text x="337.28999999999996" y="47" font-size="6.5" fill="#97a3b8" text-anchor="middle" font-family="Malgun Gothic">점심</text>
     <!-- 질문 발생 곡선 -->
-    <path d="M30,100 C90,96 120,60 160,66 C200,72 230,92 270,94 C310,96 350,90 390,86 C430,82 470,70 510,56 C550,42 580,32 620,30"
+    <path d="M30.0,38.0 C38.2,42.0 60.7,51.7 79.2,62.0 C97.6,72.3 120.1,94.5 140.6,100.0 C161.1,105.5 183.6,97.3 202.1,95.0 C220.5,92.7 230.8,88.3 251.2,86.0 C271.7,83.7 300.4,82.3 325.0,81.0 C349.6,79.7 374.2,79.8 398.8,78.0 C423.3,76.2 452.0,74.0 472.5,70.0 C493.0,66.0 505.3,59.2 521.7,54.0 C538.1,48.8 558.5,42.3 570.8,39.0 C583.1,35.7 587.2,34.2 595.4,34.0 C603.6,33.8 615.9,37.3 620.0,38.0"
           fill="none" stroke="#e05a2b" stroke-width="2.2" stroke-dasharray="5,3"/>
-    <text x="30" y="86" font-size="9" fill="#c2410c" font-family="Malgun Gothic" font-weight="bold">질문 발생량(추정)</text>
+    <line x1="488" y1="8" x2="512" y2="8" stroke="#e05a2b" stroke-width="2.2" stroke-dasharray="5,3"/><text x="517" y="11" font-size="8.5" fill="#c2410c" font-family="Malgun Gothic" font-weight="bold">질문 발생량(추정)</text>
     <!-- 공백 강조 -->
-    <rect x="447" y="30" width="173" height="78" fill="#e05a2b" opacity="0.07"/>
-    <rect x="30" y="30" width="221" height="78" fill="#e05a2b" opacity="0.07"/>
-    <text x="533" y="146" font-size="9.5" fill="#c2410c" text-anchor="middle" font-family="Malgun Gothic" font-weight="bold">질문은 늘어나는데 창구는 닫혀 있는 구간</text>
-    <text x="140" y="146" font-size="9.5" fill="#c2410c" text-anchor="middle" font-family="Malgun Gothic" font-weight="bold">창구가 닫힌 새벽 구간</text>
+    <rect x="460.21" y="30" width="159.79" height="78" fill="#e05a2b" opacity="0.07"/>
+    <rect x="325.0" y="30" width="24.579999999999984" height="78" fill="#e05a2b" opacity="0.07"/>
+    <rect x="30.0" y="30" width="221.25" height="78" fill="#e05a2b" opacity="0.07"/>
+    <text x="540.11" y="146" font-size="9.5" fill="#c2410c" text-anchor="middle" font-family="Malgun Gothic" font-weight="bold">질문은 늘어나는데 창구는 닫혀 있는 구간</text>
+    <text x="140.625" y="146" font-size="9.5" fill="#c2410c" text-anchor="middle" font-family="Malgun Gothic" font-weight="bold">창구가 닫힌 새벽 구간</text>
     <text x="30" y="170" font-size="7.5" fill="#9aa7bd" font-family="Malgun Gothic">※ 점선 곡선은 전화 문의가 기록되지 않아 실측하지 못한 가정치로, 아래 생활 패턴을 근거로 그렸습니다(실제 분포는 9쪽 0단계 인터뷰로 확인).</text>
   </svg>
   <div class="card" style="padding:3mm 3.5mm;margin:0 0 2mm">
@@ -578,7 +582,7 @@
 
   <p class="fine" style="margin-bottom:2mm">
     ※ 근거를 찾지 못하거나 개별 학적 확인이 필요하면 답변을 생성하지 않고
-    <b>학사운영팀 031-400-4231 · 평일 09–18시</b> 안내와 1:1 문의 접수로 인계합니다(6쪽 참조).
+    <b>학사운영팀 031-400-4231 · 평일 09:00–17:30(점심 12–13시 제외)</b> 안내와 1:1 문의 접수로 인계합니다(6쪽 참조).
   </p>
   <div class="pagenum">7</div>
 </div>

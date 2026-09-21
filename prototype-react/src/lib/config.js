@@ -7,7 +7,23 @@ export const DEFAULT_SB_KEY = 'sb_publishable_qEv1k4Nq6L6MBB57x5Wo3g_mUcri3eF'
 export const OFFICE = {
   name: 'ERICA 학사운영팀',
   tel: '031-400-4231',
-  hours: '평일 09:00 – 18:00',
+  hours: '평일 09:00 – 17:30 (점심 12:00 – 13:00 · 주말·공휴일 휴무)',
+}
+
+/**
+ * 지금 학사운영팀이 전화를 받는 시간인지와, 아니라면 다음 응대 가능 시각.
+ * 평일 09:00–12:00, 13:00–17:30. 공휴일은 판별하지 않습니다.
+ */
+export function officeStatus(now = new Date()) {
+  const day = now.getDay()               // 0=일, 6=토
+  const m = now.getHours() * 60 + now.getMinutes()
+  const weekday = day >= 1 && day <= 5
+  if (weekday && ((m >= 540 && m < 720) || (m >= 780 && m < 1050))) return { open: true }
+  if (weekday && m >= 720 && m < 780) return { open: false, next: '오늘 오후 1시 (점심시간)' }
+  if (weekday && m < 540) return { open: false, next: '오늘 오전 9시' }
+  // 평일 17:30 이후 또는 주말 → 다음 평일 09:00
+  const nextDay = day === 5 || day === 6 ? '월요일' : day === 0 ? '내일(월)' : '내일'
+  return { open: false, next: `${nextDay} 오전 9시` }
 }
 
 export const MODELS = [

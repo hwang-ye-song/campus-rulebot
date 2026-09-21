@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { OFFICE, profileLines } from '../lib/config'
+import { OFFICE, officeStatus, profileLines } from '../lib/config'
 import { CUSTOM_ID, PRESETS } from '../lib/presets'
 import { chat, logQuestion } from '../lib/api'
 import { retrieve } from '../lib/rag'
@@ -49,13 +49,12 @@ export default function StudentView({ settings, kb, profile, setProfile, onLog, 
   const set = (patch) => setProfile((p) => ({ ...p, ...patch }))
 
   const onCall = useCallback(() => {
-    const h = new Date().getHours()
-    const open = h >= 9 && h < 18
+    const st = officeStatus()
     push({
       role: 'ai',
-      text: open
+      text: st.open
         ? `지금은 운영시간입니다. ${OFFICE.tel} 로 전화하시면 바로 상담받으실 수 있습니다.`
-        : `지금은 운영시간이 아닙니다.\n${OFFICE.name} · ${OFFICE.tel}\n다음 응대 가능 시각은 평일 오전 9시입니다.\n기다리기 어려우시면 「1:1 문의 남기기」로 지금 남겨두세요. 운영시간이 시작되면 순서대로 답변됩니다.`,
+        : `지금은 운영시간이 아닙니다.\n${OFFICE.name} · ${OFFICE.tel}\n${OFFICE.hours}\n다음 응대 가능 시각은 ${st.next}입니다.\n기다리기 어려우시면 「1:1 문의 남기기」로 지금 남겨두세요. 운영시간이 시작되면 순서대로 답변됩니다.`,
     })
   }, [push])
 

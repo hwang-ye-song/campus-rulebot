@@ -371,7 +371,7 @@ create policy "log all" on question_log for all using (true) with check (true);<
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
 const $ = s => document.querySelector(s);
-const OFFICE = { name:'ERICA 학사운영팀', tel:'031-400-4231', hours:'평일 09:00 – 18:00' };
+const OFFICE = { name:'ERICA 학사운영팀', tel:'031-400-4231', hours:'평일 09:00 – 17:30 (점심 12:00 – 13:00 · 주말·공휴일 휴무)' };
 let KB = [], logs = [], pendingChunks = [];
 
 const DEFAULT_PROMPT = `당신은 한양대학교 ERICA캠퍼스 학사 상담 AI입니다. 학생에게 한국어 존댓말로 답합니다.
@@ -751,7 +751,7 @@ function escalateHTML(reason){
 }
 window.act = function(kind){
   if(kind==='call'){
-    const h=new Date().getHours(), open = h>=9&&h<18;
+    const d=new Date(), mm=d.getHours()*60+d.getMinutes(), wd=d.getDay()>=1&&d.getDay()<=5, open = wd && ((mm>=540&&mm<720)||(mm>=780&&mm<1050));
     add('ai', paras(open
       ? '지금은 운영시간입니다. '+OFFICE.tel+' 로 전화하시면 바로 상담받으실 수 있습니다.'
       : '지금은 운영시간이 아닙니다.\n'+OFFICE.name+' · '+OFFICE.tel+'\n다음 응대 가능 시각은 평일 오전 9시입니다.\n기다리기 어려우시면 「1:1 문의 남기기」로 지금 남겨두세요. 운영시간이 시작되면 순서대로 답변됩니다.'));
