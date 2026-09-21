@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+.env.local
+.DS_Store
+Thumbs.db
+
+# 학교 규정 원문 — 재배포하지 않습니다 (README 지식베이스 항목 참조)
+학칙_2024.pdf
+학칙_전문.txt
+수강신청안내_전문.txt
+kb.json

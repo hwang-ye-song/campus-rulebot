@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>새벽 3시의 학사팀</title>
+<style>
+:root{
+  --blue:#1a4fd6; --navy:#0b2a7a; --ink:#16233a; --mut:#6b7a94;
+  --line:#dbe3f2; --bg:#eef3fb; --warn:#c2410c; --warnbg:#fff4ec; --ok:#0f7b52;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Malgun Gothic','맑은 고딕',sans-serif;background:var(--bg);color:var(--ink);
+     display:flex;justify-content:center;padding:16px;min-height:100vh}
+.app{width:100%;max-width:1200px}
+.hd{display:flex;align-items:baseline;gap:13px;margin-bottom:12px;flex-wrap:wrap}
+.hd h1{font-size:21px;color:var(--navy);letter-spacing:-.6px}
+.hd h1 span{color:var(--blue)}
+.hd .sub{font-size:12.5px;color:var(--mut)}
+.hd .kbinfo{margin-left:auto;font-size:11.5px;background:#fff;border:1px solid var(--line);
+  border-radius:20px;padding:6px 13px;color:var(--mut)}
+.hd .kbinfo b{color:var(--blue)}
+
+.tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.tabs button{font-family:inherit;font-size:13px;font-weight:bold;cursor:pointer;
+  border:1px solid var(--line);background:#fff;color:var(--mut);
+  padding:9px 16px;border-radius:8px 8px 0 0;border-bottom:none}
+.tabs button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.pane{display:none}.pane.on{display:block}
+.wrap{display:grid;grid-template-columns:1.3fr .8fr;gap:13px;align-items:start}
+@media(max-width:920px){.wrap{grid-template-columns:1fr}}
+
+.box{background:#fff;border:1px solid var(--line);border-radius:11px;overflow:hidden;margin-bottom:12px}
+.box>h2{font-size:13.5px;background:var(--navy);color:#fff;padding:11px 15px}
+.box>h2 small{float:right;font-weight:normal;opacity:.82;font-size:11.5px}
+
+#chat{height:462px;overflow-y:auto;padding:15px;background:#f6f9fe}
+.msg{display:flex;margin-bottom:11px}.msg.me{justify-content:flex-end}
+.bub{max-width:82%;padding:10px 13px;border-radius:11px;font-size:13.2px;line-height:1.63;word-break:keep-all}
+.me .bub{background:var(--blue);color:#fff;border-bottom-right-radius:3px;white-space:pre-wrap}
+.ai .bub{background:#fff;border:1px solid var(--line);border-bottom-left-radius:3px}
+.ai .bub p{margin-bottom:7px}.ai .bub p:last-child{margin-bottom:0}
+.src{margin-top:9px;padding-top:8px;border-top:1px dashed #cfd9ec;font-size:11.4px;color:var(--blue);line-height:1.55}
+.src b{display:block;margin-bottom:3px;color:var(--navy)}
+.src .q{display:block;color:#7c8aa3;margin:3px 0 6px;padding-left:8px;border-left:2px solid #dbe3f2}
+.esc{margin-top:9px;padding:9px 11px;background:var(--warnbg);border-radius:6px;font-size:11.9px;color:var(--warn);line-height:1.58}
+.esc .btns{margin-top:8px;display:flex;gap:7px;flex-wrap:wrap}
+.esc button{font-family:inherit;font-size:11.5px;font-weight:bold;cursor:pointer;
+  border:1px solid var(--warn);background:#fff;color:var(--warn);padding:6px 11px;border-radius:5px}
+.esc button:hover{background:var(--warn);color:#fff}
+.note{margin-top:9px;padding:9px 11px;background:#f4f7fd;border-radius:6px;font-size:11.7px;color:#46587a;line-height:1.55}
+.typing i{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--mut);margin-right:3px;animation:bl 1.1s infinite}
+.typing i:nth-child(2){animation-delay:.18s}.typing i:nth-child(3){animation-delay:.36s}
+@keyframes bl{0%,60%,100%{opacity:.25}30%{opacity:1}}
+
+.inp{display:flex;gap:8px;padding:11px;border-top:1px solid var(--line)}
+.inp input{flex:1;font-family:inherit;font-size:13.2px;padding:10px 13px;border:1px solid var(--line);border-radius:8px;outline:none}
+.inp input:focus{border-color:var(--blue)}
+.inp button{font-family:inherit;font-size:13.2px;font-weight:bold;cursor:pointer;background:var(--blue);color:#fff;border:none;padding:10px 20px;border-radius:8px}
+.inp button:disabled{background:#b4c0d4;cursor:default}
+
+.pad{padding:13px 15px}
+.row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.row label{font-size:11.8px;color:var(--mut);width:64px;flex:none}
+.row select,.row input{flex:1;font-family:inherit;font-size:12.3px;padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:#fff;outline:none}
+.row input:focus,.row select:focus{border-color:var(--blue)}
+.hint{font-size:11.2px;color:var(--blue);line-height:1.52;background:#eef3ff;padding:7px 9px;border-radius:5px}
+.hint.w{background:var(--warnbg);color:var(--warn)}
+.hint.g{background:#eaf7f1;color:var(--ok)}
+.btn{font-family:inherit;font-size:12.5px;font-weight:bold;cursor:pointer;background:var(--blue);
+  color:#fff;border:none;padding:9px 16px;border-radius:7px}
+.btn:disabled{background:#b4c0d4;cursor:default}
+.btn.sec{background:#fff;color:var(--blue);border:1px solid var(--blue)}
+.btn.warn{background:#fff;color:var(--warn);border:1px solid var(--warn)}
+
+.ex button{display:block;width:100%;text-align:left;font-family:inherit;font-size:12.4px;cursor:pointer;
+  background:#f6f9fe;border:1px solid var(--line);color:var(--ink);padding:9px 11px;border-radius:7px;margin-bottom:6px;line-height:1.45}
+.ex button:hover{background:#e8effd;border-color:var(--blue)}
+.ex p{font-size:11.8px;color:var(--mut);margin-bottom:8px}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.stats div{background:#f6f9fe;border:1px solid var(--line);border-radius:8px;padding:12px;text-align:center}
+.stats .v{font-size:21px;font-weight:bold;color:var(--blue)}
+.stats .l{font-size:11.2px;color:var(--mut);margin-top:3px;line-height:1.4}
+table{width:100%;border-collapse:collapse;font-size:12.3px}
+th{background:var(--navy);color:#fff;padding:9px 10px;text-align:left}
+td{border-bottom:1px solid #e7edf8;padding:9px 10px;line-height:1.5;vertical-align:top}
+.bar{height:9px;background:var(--blue);border-radius:5px;display:inline-block;vertical-align:middle}
+.pill{font-size:10.8px;border-radius:3px;padding:2px 6px;background:#e3ebff;color:var(--blue)}
+.pill.r{background:#ffe6dc;color:var(--warn)}
+.empty{padding:26px 15px;text-align:center;color:var(--mut);font-size:12.5px;line-height:1.6}
+.fine{font-size:11.2px;color:var(--mut);line-height:1.56;margin-top:11px}
+code{background:#eef2f9;padding:1px 5px;border-radius:3px;font-size:11.5px}
+pre{background:#f6f9fe;border:1px solid var(--line);border-radius:6px;padding:10px;overflow:auto;
+    white-space:pre;font-size:11.2px;line-height:1.55;color:var(--mut)}
+textarea{width:100%;font-family:'Consolas','Malgun Gothic',monospace;font-size:12px;line-height:1.6;
+  padding:11px;border:1px solid var(--line);border-radius:7px;outline:none;resize:vertical}
+textarea:focus{border-color:var(--blue)}
+
+.drop{border:2px dashed #b9cdf5;border-radius:10px;padding:26px 16px;text-align:center;
+  background:#f8fbff;cursor:pointer;transition:.15s}
+.drop:hover,.drop.over{background:#eaf1ff;border-color:var(--blue)}
+.drop .big{font-size:14px;font-weight:bold;color:var(--navy);margin-bottom:5px}
+.drop .s{font-size:11.6px;color:var(--mut);line-height:1.55}
+.prog{height:7px;background:#e3ebff;border-radius:5px;overflow:hidden;margin:10px 0 6px}
+.prog i{display:block;height:100%;background:var(--blue);width:0;transition:.25s}
+.plog{font-size:11.3px;color:var(--mut);line-height:1.6;max-height:150px;overflow-y:auto;
+  background:#f6f9fe;border:1px solid var(--line);border-radius:6px;padding:9px}
+.plog .e{color:var(--warn)}.plog .k{color:var(--ok)}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="hd">
+    <h1>새벽 3시의 <span>학사팀</span></h1>
+    <div class="sub">학칙을 근거로만 답하는 ERICA 학사 상담 AI</div>
+    <div class="kbinfo">지식베이스 <b id="kbn">0</b>개 조각 · <span id="kbmode">기본 내장</span></div>
+  </div>
+
+  <div class="tabs">
+    <button class="on" data-p="chat">학생 화면</button>
+    <button data-p="dash">학사팀 대시보드</button>
+    <button data-p="kb">지식베이스 구축</button>
+    <button data-p="prompt">프롬프트</button>
+    <button data-p="how">동작 방식</button>
+  </div>
+
+  <!-- ============ 학생 ============ -->
+  <div class="pane on" id="p-chat">
+    <div class="wrap">
+      <div class="box" style="margin-bottom:0">
+        <h2>ERICA 학사 상담 <small id="clock">--:--</small></h2>
+        <div id="chat"></div>
+        <div class="inp">
+          <input id="q" placeholder="궁금한 것을 물어보세요 (예: 1학년인데 휴학 되나요?)" autocomplete="off">
+          <button id="send">전송</button>
+        </div>
+      </div>
+      <div>
+        <div class="box">
+          <h2>설정 <small>키는 이 브라우저에만 저장됩니다</small></h2>
+          <div class="pad">
+            <div class="row" style="align-items:flex-start">
+              <label style="padding-top:3px">호출 방식</label>
+              <div style="flex:1">
+                <label style="width:auto;font-size:12.2px;color:var(--ink);display:flex;gap:6px;align-items:center;cursor:pointer">
+                  <input type="checkbox" id="useEdge" style="flex:none;width:auto;margin:0"> Edge Function 경유 (권장 · 키 노출 없음)
+                </label>
+              </div>
+            </div>
+            <div class="row" id="keyRow"><label>API 키</label><input id="key" type="password" placeholder="sk-..."></div>
+            <div class="row"><label>답변 모델</label>
+              <select id="model">
+                <option value="gpt-5.6-luna">gpt-5.6-luna (저비용 · $0.20/$1.20 per 1M)</option>
+                <option value="gpt-5.6-sol">gpt-5.6-sol</option>
+                <option value="gpt-5.6-terra">gpt-5.6-terra</option>
+                <option value="gpt-4.1-nano">gpt-4.1-nano</option>
+                <option value="gpt-4o-mini">gpt-4o-mini</option>
+                <option value="__custom">직접 입력…</option>
+              </select>
+            </div>
+            <div class="row" id="customRow" style="display:none">
+              <label>모델명</label><input id="modelCustom" placeholder="예: gpt-5.6-luna">
+            </div>
+            <div class="hint" id="keyState"></div>
+          </div>
+        </div>
+        <div class="box">
+          <h2>내 조건</h2>
+          <div class="pad">
+            <div class="row"><label>캠퍼스</label>
+              <select id="camp"><option>ERICA캠퍼스</option><option>서울캠퍼스</option></select></div>
+            <div class="row"><label>학년</label>
+              <select id="year"><option value="1">1학년</option><option value="2">2학년</option>
+              <option value="3" selected>3학년</option><option value="4">4학년</option></select></div>
+            <div class="row"><label>입학</label>
+              <select id="cohort"><option value="25이하" selected>25학번 이하</option><option value="26이후">26학번 이후</option></select></div>
+            <div class="row"><label>전공</label>
+              <select id="majorType">
+                <option value="단일전공" selected>단일전공</option>
+                <option value="다중전공">다중전공 · 복수전공</option>
+                <option value="부전공">부전공</option>
+              </select></div>
+            <div class="row"><label>추가신청</label>
+              <div style="flex:1;font-size:11.6px;line-height:1.7">
+                <label style="width:auto;display:inline-flex;gap:4px;align-items:center;cursor:pointer;margin-right:9px">
+                  <input type="checkbox" id="vol" style="flex:none;width:auto;margin:0"> 사회봉사</label>
+                <label style="width:auto;display:inline-flex;gap:4px;align-items:center;cursor:pointer;margin-right:9px">
+                  <input type="checkbox" id="rotc" style="flex:none;width:auto;margin:0"> ROTC 필수</label>
+                <label style="width:auto;display:inline-flex;gap:4px;align-items:center;cursor:pointer">
+                  <input type="checkbox" id="grad" style="flex:none;width:auto;margin:0"> 졸업예정학기</label>
+              </div></div>
+            <div class="hint" id="curr"></div>
+            <div class="hint" style="margin-top:6px;background:#f4f7fd;color:#46587a">
+              <b>시연용 수동 입력.</b> 실제 운영 시에는 로그인과 동시에
+              <b>학사정보시스템에서 자동으로 불러옵니다.</b> 학생이 자기 조건을 입력할 필요가 없습니다.
+            </div>
+          </div>
+          <div class="pad ex" style="border-top:1px solid var(--line)">
+            <p>눌러서 바로 질문해 보세요</p>
+            <button data-q="1학년인데 휴학할 수 있나요?">1학년인데 휴학할 수 있나요?</button>
+            <button data-q="복수전공은 몇 학점을 이수해야 하나요?">복수전공은 몇 학점을 이수해야 하나요?</button>
+            <button data-q="23학점 들을 수 있나요?">23학점 들을 수 있나요? <span style="color:#c2410c;font-size:11px">(조건 바꿔가며 비교)</span></button>
+            <button data-q="저는 몇 학년도 교육과정이 적용되나요?">저는 몇 학년도 교육과정이 적용되나요?</button>
+            <button data-q="제 경우에 지금 휴학하면 불이익이 있을까요?">제 경우에 지금 휴학하면 불이익이 있을까요?</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 대시보드 ============ -->
+  <div class="pane" id="p-dash">
+    <div class="box">
+      <h2>학사팀 대시보드 <small>질문 로그 → 규정 개선 신호</small></h2>
+      <div class="pad">
+        <div class="stats">
+          <div><div class="v" id="s1">0</div><div class="l">누적 질문</div></div>
+          <div><div class="v" id="s2">0</div><div class="l">근거 제시 답변</div></div>
+          <div><div class="v" id="s3">0</div><div class="l">답변 불가<br>(부서 인계)</div></div>
+          <div><div class="v" id="s4">0%</div><div class="l">답변 불가 비율</div></div>
+        </div>
+        <div style="margin-bottom:10px"><button class="btn sec" id="loadLogs">Supabase에서 로그 불러오기</button></div>
+        <div id="dashBody"><div class="empty">아직 질문이 없습니다.<br>「학생 화면」에서 몇 가지 물어보면 이곳에 집계됩니다.</div></div>
+        <p class="fine">
+          질문이 반복해서 몰리는 조항은 <b>학생이 몰라서가 아니라 규정이 불명확하다는 신호</b>입니다.
+          이 표가 곧 개정이 필요한 조항 목록이 됩니다.
+          기록에는 <b>학번·성명 등 식별 정보를 저장하지 않고</b> 질문 텍스트와 조항 식별자만 남깁니다.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 지식베이스 ============ -->
+  <div class="pane" id="p-kb">
+    <div class="wrap">
+      <div>
+        <div class="box">
+          <h2>규정 문서 올리기 <small>PDF · TXT · MD</small></h2>
+          <div class="pad">
+            <div class="drop" id="drop">
+              <div class="big">파일을 끌어다 놓거나 클릭해서 선택</div>
+              <div class="s">학칙, 학사운영규정, 수강신청 안내문 등<br>PDF는 브라우저에서 바로 텍스트를 추출합니다</div>
+              <input type="file" id="file" accept=".pdf,.txt,.md" multiple hidden>
+            </div>
+            <div class="row" style="margin-top:12px">
+              <label>문서명</label><input id="docName" placeholder="예: 한양대학교 학칙(2024.10.31. 개정)">
+            </div>
+            <div class="row">
+              <label>분할 방식</label>
+              <select id="splitMode">
+                <option value="article">조문 단위 (제○조 기준 · 규정 문서 권장)</option>
+                <option value="fixed">고정 길이 (900자 · 일반 문서)</option>
+              </select>
+            </div>
+            <div class="row">
+              <label>임베딩</label>
+              <select id="embModel">
+                <option value="text-embedding-3-small">text-embedding-3-small (저렴)</option>
+                <option value="text-embedding-3-large">text-embedding-3-large (정확)</option>
+              </select>
+            </div>
+            <div style="display:flex;gap:7px;margin-top:4px;flex-wrap:wrap">
+              <button class="btn" id="build" disabled>임베딩 생성 후 저장</button>
+              <button class="btn sec" id="preview" disabled>분할 결과만 미리보기</button>
+            </div>
+            <div class="prog" id="progWrap" style="display:none"><i id="prog"></i></div>
+            <div class="plog" id="plog" style="display:none"></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="box">
+          <h2>Supabase <small>벡터 저장소</small></h2>
+          <div class="pad">
+            <div class="row"><label>URL</label><input id="sbUrl" placeholder="https://xxxx.supabase.co"></div>
+            <div class="row"><label>anon key</label><input id="sbKey" type="password" placeholder="eyJ..."></div>
+            <div class="hint" id="sbState"></div>
+            <div style="display:flex;gap:7px;margin-top:9px;flex-wrap:wrap">
+              <button class="btn sec" id="sbLoad">저장된 지식베이스 불러오기</button>
+              <button class="btn warn" id="sbClear">전체 삭제</button>
+            </div>
+            <p class="fine">Supabase SQL 편집기에서 아래를 먼저 실행하세요.</p>
+            <pre>create table if not exists kb_chunk (
+  id bigserial primary key,
+  created_at timestamptz default now(),
+  doc_name text not null,
+  chunk_id text,
+  title text,
+  source text not null,
+  content text not null,
+  embedding jsonb
+);
+create table if not exists question_log (
+  id bigserial primary key,
+  created_at timestamptz default now(),
+  question text not null,
+  campus text, grade int,
+  answerable boolean,
+  sources text[]
+);
+alter table kb_chunk       enable row level security;
+alter table question_log   enable row level security;
+create policy "kb all"  on kb_chunk     for all using (true) with check (true);
+create policy "log all" on question_log for all using (true) with check (true);</pre>
+            <div class="hint w" style="margin-top:8px">
+              위 정책은 <b>데모용으로 누구나 읽고 쓸 수 있게</b> 열어둔 설정입니다.
+              실제 운영 배포 시에는 반드시 인증된 사용자로 제한하세요.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 프롬프트 ============ -->
+  <div class="pane" id="p-prompt">
+    <div class="box">
+      <h2>시스템 프롬프트 <small>AI가 지켜야 할 규칙</small></h2>
+      <div class="pad">
+        <p class="fine" style="margin:0 0 9px">
+          이 프롬프트가 <b>"근거 없으면 답하지 않는다"는 원칙을 실제로 강제하는 장치</b>입니다.
+          수정하면 즉시 반영되며 이 브라우저에 저장됩니다.
+        </p>
+        <textarea id="sysPrompt" rows="22"></textarea>
+        <div style="display:flex;gap:7px;margin-top:9px;flex-wrap:wrap">
+          <button class="btn" id="savePrompt">저장</button>
+          <button class="btn sec" id="resetPrompt">기본값으로 되돌리기</button>
+          <span class="hint g" id="promptState" style="display:none;flex:1"></span>
+        </div>
+        <div class="hint" style="margin-top:11px">
+          <b>실험해 보세요.</b> 1번 규칙("근거가 있는 내용만 답하라")을 지우고 같은 질문을 던지면,
+          모델이 <b>다른 대학의 관례나 그럴듯한 추측으로 답하기 시작합니다.</b>
+          이 차이가 곧 제안서에서 말한 환각 문제이며, 프롬프트가 그것을 어떻게 억제하는지 보여주는 시연이 됩니다.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 동작 방식 ============ -->
+  <div class="pane" id="p-how">
+    <div class="box">
+      <h2>동작 방식 <small>이 프로토타입이 실제로 하는 일</small></h2>
+      <div class="pad">
+        <table>
+          <tr><th style="width:16%">단계</th><th>내용</th></tr>
+          <tr><td><b>1. 수집</b></td><td>학칙 PDF를 브라우저에서 직접 파싱해 텍스트를 추출합니다. 별도 서버가 필요 없습니다.</td></tr>
+          <tr><td><b>2. 분할</b></td><td><b>제○조 단위로 잘라</b> 조문 하나가 검색 단위가 되게 합니다. 답변에 조항 번호를 붙이기 위한 전제입니다.</td></tr>
+          <tr><td><b>3. 임베딩</b></td><td>각 조문을 <code>text-embedding-3-small</code>로 벡터화해 <b>Supabase에 저장</b>합니다. 한 번 만들어 두면 이후에는 재생성이 필요 없습니다.</td></tr>
+          <tr><td><b>4. 검색</b></td><td>질문도 같은 방식으로 벡터화한 뒤 <b>코사인 유사도로 관련 조문 상위 6개</b>를 고릅니다. 임베딩이 없으면 글자 단위 부분 일치 검색으로 대체 동작합니다.</td></tr>
+          <tr><td><b>5. 생성</b></td><td>선택된 조문 <b>원문만</b> 모델에 전달하고, 그 안에 없는 내용은 말하지 말 것과 사용한 조문 번호를 밝힐 것을 지시합니다. 학생의 캠퍼스·학년도 함께 전달해 적용 조건을 좁힙니다.</td></tr>
+          <tr><td><b>6. 검증</b></td><td>모델이 <code>answerable: false</code>를 반환하면 <b>답변을 표시하지 않고</b> 전화 안내와 1:1 문의로 인계합니다. 모델이 인용한 조문 번호가 실제 전달한 조문에 있는지도 대조합니다.</td></tr>
+          <tr><td><b>7. 환류</b></td><td>질문과 연결 조항, 답변 가능 여부를 저장해 <b>모호 조항 진단표</b>로 집계합니다.</td></tr>
+        </table>
+        <div class="hint w" style="margin-top:12px">
+          <b>한계를 분명히 밝힙니다.</b> 근거 기반 설계로도 오답 가능성은 0이 되지 않습니다.
+          이 시스템의 답변은 <b>안내이며 최종 유권해석이 아닙니다.</b>
+          학적변동·졸업사정처럼 되돌릴 수 없는 사안은 반드시 담당 부서 확인을 거치도록 설계했습니다.
+        </div>
+        <div class="hint" style="margin-top:9px">
+          <b>배포.</b> 정적 파일이라 Vercel에 그대로 올라갑니다. API 키는 코드에 포함되지 않고 사용자가 브라우저에서 입력합니다.
+          공개 배포 시에는 키를 서버 환경변수로 옮기고 서버리스 함수를 경유하도록 바꾸는 것을 권장합니다.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const OFFICE = { name:'ERICA 학사운영팀', tel:'031-400-4231', hours:'평일 09:00 – 18:00' };
+let KB = [], logs = [], pendingChunks = [];
+
+const DEFAULT_PROMPT = `당신은 한양대학교 ERICA캠퍼스 학사 상담 AI입니다. 학생에게 한국어 존댓말로 답합니다.
+
+절대 규칙:
+1. 아래 <규정>에 제시된 원문에 근거가 있는 내용만 답하십시오. 원문에 없는 수치·기한·절차를 지어내지 마십시오.
+2. 일반 상식이나 다른 대학의 관례로 보충하지 마십시오.
+3. 규정에 답이 없거나, 개별 학생의 학적 기록을 확인해야 판단할 수 있는 질문이면 answerable을 false로 하십시오.
+4. 규정이 "세부사항은 따로 정한다", "별도로 정한다"처럼 다른 규정으로 위임하고 있어 실질 내용을 알 수 없으면 answerable을 false로 하고, reason에 "학칙이 세칙으로 위임하고 있어 학칙만으로는 확인 불가"라고 쓰십시오.
+5. 캠퍼스나 학년에 따라 적용이 갈리는 조항이면, 학생의 조건에 해당하는 내용을 먼저 말하고 다른 조건은 주의사항으로 덧붙이십시오.
+6. 조항에 단서("다만, …")나 예외가 있으면 반드시 함께 알리십시오.
+7. <학생 조건>에 주어진 학년·입학 구분·전공 유형·추가 신청 사항을 모두 반영해 계산하십시오. 특히 수강 가능 학점처럼 조건에 따라 값이 달라지는 질문은, 그 학생에게 적용되는 값을 먼저 확정해 말하고, 다른 조건이었다면 달라졌을 부분을 caution에 적으십시오.
+
+반드시 아래 JSON 형식으로만 응답하십시오:
+{"answerable": true/false, "answer": "학생에게 보여줄 답변", "used": ["제24조", "제25조"], "caution": "단서·예외·주의사항 (없으면 빈 문자열)", "reason": "answerable이 false일 때만, 답할 수 없는 이유"}`;
+
+/* ---------- 설정 저장 ---------- */
+const LS = { get:k=>{try{return localStorage.getItem(k)||''}catch(e){return ''}},
+             set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}} };
+const DEF_SB_URL = 'https://rtkirzxoxeevxjxzlhul.supabase.co';
+const DEF_SB_KEY = 'sb_publishable_qEv1k4Nq6L6MBB57x5Wo3g_mUcri3eF';
+['key:oa_key','sbUrl:sb_url','sbKey:sb_key'].forEach(p=>{
+  const [id,k] = p.split(':'); $('#'+id).value = LS.get(k);
+});
+if(!$('#sbUrl').value) $('#sbUrl').value = DEF_SB_URL;
+if(!$('#sbKey').value) $('#sbKey').value = DEF_SB_KEY;
+$('#useEdge').checked = LS.get('use_edge') === '1';
+$('#useEdge').onchange = ()=>{ LS.set('use_edge', $('#useEdge').checked?'1':'0'); edgeState(); keyState(); };
+function edgeState(){ $('#keyRow').style.display = $('#useEdge').checked ? 'none' : 'flex'; }
+const useEdge = ()=> $('#useEdge').checked && sbReady();
+const edgeUrl = ()=> sb().url + '/functions/v1/ask';
+async function edgeCall(payload){
+  const r = await fetch(edgeUrl(), {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json', Authorization:'Bearer '+sb().key, apikey: sb().key },
+    body: JSON.stringify(payload)
+  });
+  const j = await r.json().catch(()=>({error:'응답 해석 실패'}));
+  if(!r.ok || j.error) throw new Error((j.error||('오류 '+r.status)) + (j.detail?(' — '+j.detail):''));
+  return j;
+}
+$('#sysPrompt').value = LS.get('sys_prompt') || DEFAULT_PROMPT;
+const savedModel = LS.get('oa_model');
+if(savedModel){
+  if([...$('#model').options].some(o=>o.value===savedModel)) $('#model').value = savedModel;
+  else { $('#model').value='__custom'; $('#customRow').style.display='flex'; $('#modelCustom').value=savedModel; }
+}
+const modelName = ()=> $('#model').value==='__custom' ? ($('#modelCustom').value.trim()||'gpt-5.6-luna') : $('#model').value;
+$('#model').onchange = ()=>{ $('#customRow').style.display = $('#model').value==='__custom'?'flex':'none'; LS.set('oa_model', modelName()); keyState(); };
+$('#modelCustom').oninput = ()=> LS.set('oa_model', modelName());
+$('#key').oninput = ()=>{ LS.set('oa_key', $('#key').value.trim()); keyState(); canBuild(); };
+$('#sbUrl').oninput = ()=>{ LS.set('sb_url', $('#sbUrl').value.trim()); sbState(); };
+$('#sbKey').oninput = ()=>{ LS.set('sb_key', $('#sbKey').value.trim()); sbState(); };
+
+$('#savePrompt').onclick = ()=>{
+  LS.set('sys_prompt', $('#sysPrompt').value);
+  const el = $('#promptState'); el.style.display='block'; el.textContent='저장되었습니다. 다음 질문부터 적용됩니다.';
+  setTimeout(()=>el.style.display='none', 2600);
+};
+$('#resetPrompt').onclick = ()=>{ $('#sysPrompt').value = DEFAULT_PROMPT; LS.set('sys_prompt', DEFAULT_PROMPT); };
+
+function keyState(){
+  const k = $('#key').value.trim(), el = $('#keyState');
+  if($('#useEdge').checked){
+    if(!sbReady()){ el.className='hint w'; el.textContent='Edge Function을 쓰려면 「지식베이스 구축」 탭에서 Supabase URL과 키를 먼저 입력하세요.'; }
+    else { el.className='hint g'; el.textContent='Edge Function(/functions/v1/ask) 경유. OpenAI 키는 서버 시크릿에 있으며 브라우저에 노출되지 않습니다.'; }
+    return;
+  }
+  if(!k){ el.className='hint'; el.textContent='API 키를 입력하면 실제 LLM이 답변합니다. 키는 서버로 전송되지 않고 이 브라우저에만 저장됩니다.'; }
+  else { el.className='hint g'; el.textContent='키가 저장되었습니다. '+modelName()+' 모델이 학칙 조문을 근거로 답변합니다.'; }
+}
+function sbState(){
+  const ok = $('#sbUrl').value.trim() && $('#sbKey').value.trim(), el = $('#sbState');
+  if(ok){ el.className='hint g'; el.textContent='연동됨. 지식베이스와 질문 로그가 Supabase에 저장됩니다.'; }
+  else { el.className='hint'; el.textContent='미연동 상태입니다. 입력하지 않으면 이 브라우저 메모리에만 남습니다.'; }
+}
+sbState(); edgeState(); keyState();
+const sb = ()=>({ url:$('#sbUrl').value.trim().replace(/\/$/,''), key:$('#sbKey').value.trim() });
+const sbReady = ()=> !!(sb().url && sb().key);
+const sbHead = ()=>({ 'Content-Type':'application/json', apikey:sb().key, Authorization:'Bearer '+sb().key });
+
+function prof(){
+  return {
+    camp: $('#camp').value,
+    year: +$('#year').value,
+    cohort: $('#cohort').value,
+    majorType: $('#majorType').value,
+    vol: $('#vol').checked,
+    rotc: $('#rotc').checked,
+    grad: $('#grad').checked
+  };
+}
+function profLines(p){
+  const extra = [];
+  if(p.vol)  extra.push('사회봉사 신청');
+  if(p.rotc) extra.push('ROTC 필수 교과목 신청');
+  if(p.grad) extra.push('졸업예정학기');
+  return '캠퍼스: '+p.camp
+    + String.fromCharCode(10)+'학년: '+p.year+'학년'
+    + String.fromCharCode(10)+'입학 구분: '+p.cohort+' 학번'
+    + String.fromCharCode(10)+'전공 유형: '+p.majorType
+    + String.fromCharCode(10)+'추가 신청 사항: '+(extra.length?extra.join(', '):'없음')
+    + String.fromCharCode(10)+'적용 교육과정: '+(p.year<=2?'25-28 교육과정':'20-23 교육과정');
+}
+function updateCurr(){
+  $('#curr').textContent = prof().year<=2
+    ? '2026학년도 기준 · 25-28 교육과정 적용' : '2026학년도 기준 · 20-23 교육과정 적용';
+}
+['#camp','#year','#cohort','#majorType','#vol','#rotc','#grad'].forEach(id=>{ $(id).onchange = updateCurr; }); updateCurr();
+
+function setKBInfo(mode){
+  $('#kbn').textContent = KB.length;
+  $('#kbmode').textContent = mode || (KB.some(c=>c.embedding) ? '벡터 검색' : '텍스트 검색');
+}
+
+/* ---------- 기본 지식베이스 ---------- */
+fetch('kb.json').then(r=>r.json()).then(d=>{
+  if(!KB.length){ KB = d; setKBInfo('기본 내장 · 텍스트 검색'); }
+}).catch(()=>{});
+
+/* =======================================================
+   1) 문서 → 텍스트
+   ======================================================= */
+async function pdfText(file){
+  const buf = await file.arrayBuffer();
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+  const out = [];
+  for(let i=1;i<=pdf.numPages;i++){
+    const page = await pdf.getPage(i);
+    const tc = await page.getTextContent();
+    out.push(tc.items.map(x=>x.str).join(' '));
+    plog('  · '+i+'/'+pdf.numPages+'쪽 추출');
+  }
+  return out.join('\n');
+}
+
+/* =======================================================
+   2) 분할
+   ======================================================= */
+function clean(t){
+  return t.replace(/<개정[^>]*>|<신설[^>]*>/g,'')
+          .replace(/\[전문개정[^\]]*\]|\[본조신설[^\]]*\]|\[제목개정[^\]]*\]/g,'')
+          .replace(/[ \t]+/g,' ')
+          .replace(/\n{3,}/g,'\n\n');
+}
+function splitArticles(text, docName){
+  const t = clean(text);
+  const parts = t.split(/(?=제\s?\d+조(?:의\s?\d+)?\s?\()/);
+  const out = [];
+  for(const p of parts){
+    const m = p.match(/^(제\s?\d+조(?:의\s?\d+)?)\s?\(([^)]{1,40})\)/);
+    if(!m) continue;
+    const id = m[1].replace(/\s/g,''), title = m[2].trim();
+    let body = p.slice(m[0].length).trim();
+    body = body.replace(/제\d+장\s+[^\n]{1,20}/g,'').trim();
+    if(body.length < 15 || body === '삭제') continue;
+    out.push({ chunk_id:id, title, source:docName+' '+id+'('+title+')', content:body.slice(0,1800) });
+  }
+  return out;
+}
+function splitFixed(text, docName){
+  const t = clean(text);
+  const size = 900, out = [];
+  const paras = t.split(/\n{2,}/);
+  let cur = '';
+  const push = ()=>{ if(cur.trim().length>40){
+    const n = out.length+1;
+    out.push({ chunk_id:'#'+n, title:'조각 '+n, source:docName+' — 조각 '+n, content:cur.trim() }); } cur=''; };
+  for(const p of paras){
+    if((cur+p).length > size) push();
+    cur += (cur?'\n\n':'') + p;
+  }
+  push();
+  return out;
+}
+
+/* =======================================================
+   3) 임베딩
+   ======================================================= */
+async function embed(texts, model){
+  if(useEdge()){
+    const j = await edgeCall({ mode:'embed', model, input: texts });
+    return j.embeddings;
+  }
+  const key = $('#key').value.trim();
+  const r = await fetch('https://api.openai.com/v1/embeddings', {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json', Authorization:'Bearer '+key },
+    body: JSON.stringify({ model, input: texts })
+  });
+  if(!r.ok) throw new Error('임베딩 API 오류 '+r.status+' — '+(await r.text()).slice(0,240));
+  const j = await r.json();
+  return j.data.map(d=>d.embedding);
+}
+function cosine(a,b){
+  let d=0, na=0, nb=0;
+  for(let i=0;i<a.length;i++){ d+=a[i]*b[i]; na+=a[i]*a[i]; nb+=b[i]*b[i]; }
+  return d / (Math.sqrt(na)*Math.sqrt(nb) + 1e-9);
+}
+
+/* =======================================================
+   업로드 UI
+   ======================================================= */
+function plog(msg, cls){
+  const el = $('#plog'); el.style.display='block';
+  const d = document.createElement('div');
+  if(cls) d.className = cls;
+  d.textContent = msg;
+  el.appendChild(d); el.scrollTop = el.scrollHeight;
+}
+function setProg(p){ $('#progWrap').style.display='block'; $('#prog').style.width = Math.round(p*100)+'%'; }
+function canBuild(){
+  const ok = pendingChunks.length>0;
+  $('#build').disabled = !(ok && $('#key').value.trim());
+  $('#preview').disabled = !ok;
+}
+
+$('#drop').onclick = ()=> $('#file').click();
+$('#drop').ondragover = e=>{ e.preventDefault(); $('#drop').classList.add('over'); };
+$('#drop').ondragleave = ()=> $('#drop').classList.remove('over');
+$('#drop').ondrop = e=>{ e.preventDefault(); $('#drop').classList.remove('over'); handleFiles(e.dataTransfer.files); };
+$('#file').onchange = e=> handleFiles(e.target.files);
+
+async function handleFiles(files){
+  $('#plog').innerHTML=''; pendingChunks = []; canBuild();
+  for(const f of files){
+    plog('▸ '+f.name+' 읽는 중…');
+    let text = '';
+    try{
+      text = /\.pdf$/i.test(f.name) ? await pdfText(f) : await f.text();
+    }catch(err){ plog('  ✕ 읽기 실패: '+err.message, 'e'); continue; }
+    if(!$('#docName').value.trim()) $('#docName').value = f.name.replace(/\.[^.]+$/,'');
+    const name = $('#docName').value.trim() || f.name;
+    const mode = $('#splitMode').value;
+    let ch = mode==='article' ? splitArticles(text, name) : splitFixed(text, name);
+    if(mode==='article' && ch.length < 3){
+      plog('  · 조문 패턴을 찾지 못해 고정 길이로 전환합니다', 'e');
+      ch = splitFixed(text, name);
+    }
+    ch.forEach(c=> c.doc_name = name);
+    pendingChunks = pendingChunks.concat(ch);
+    plog('  ✓ '+text.length.toLocaleString()+'자 → '+ch.length+'개 조각', 'k');
+  }
+  if(pendingChunks.length) plog('총 '+pendingChunks.length+'개 조각 준비 완료. 「임베딩 생성 후 저장」을 누르세요.', 'k');
+  canBuild();
+}
+
+$('#preview').onclick = ()=>{
+  plog('— 분할 결과 미리보기 (앞 8개) —');
+  pendingChunks.slice(0,8).forEach(c=> plog('  · ['+c.chunk_id+'] '+c.title+' · '+c.content.length+'자'));
+};
+
+$('#build').onclick = async ()=>{
+  const btn = $('#build'); btn.disabled = true;
+  const model = $('#embModel').value;
+  try{
+    plog('▸ 임베딩 생성 시작 ('+model+', '+pendingChunks.length+'개)');
+    const B = 64, vecs = [];
+    for(let i=0;i<pendingChunks.length;i+=B){
+      const batch = pendingChunks.slice(i,i+B);
+      const v = await embed(batch.map(c=> c.title+'\n'+c.content), model);
+      vecs.push(...v);
+      setProg((i+batch.length)/pendingChunks.length);
+      plog('  · '+(i+batch.length)+'/'+pendingChunks.length+' 완료');
+    }
+    pendingChunks.forEach((c,i)=> c.embedding = vecs[i]);
+    plog('  ✓ 임베딩 완료', 'k');
+
+    if(sbReady()){
+      plog('▸ Supabase 저장 중…');
+      const B2 = 40;
+      for(let i=0;i<pendingChunks.length;i+=B2){
+        const rows = pendingChunks.slice(i,i+B2).map(c=>({
+          doc_name:c.doc_name, chunk_id:c.chunk_id, title:c.title,
+          source:c.source, content:c.content, embedding:c.embedding
+        }));
+        const r = await fetch(sb().url+'/rest/v1/kb_chunk', {
+          method:'POST', headers:{ ...sbHead(), Prefer:'return=minimal' }, body: JSON.stringify(rows)
+        });
+        if(!r.ok) throw new Error('Supabase 오류 '+r.status+' — '+(await r.text()).slice(0,240));
+        plog('  · '+Math.min(i+B2,pendingChunks.length)+'/'+pendingChunks.length+' 저장');
+      }
+      plog('  ✓ Supabase 저장 완료', 'k');
+    } else {
+      plog('  · Supabase 미연동 — 이번 세션에서만 사용됩니다', 'e');
+    }
+
+    KB = pendingChunks.map(c=>({
+      id:c.chunk_id, title:c.title, chapter:c.doc_name,
+      source:c.source, text:c.content, embedding:c.embedding
+    }));
+    setKBInfo('업로드 문서 · 벡터 검색');
+    plog('▸ 지식베이스 교체 완료 — 이제 「학생 화면」에서 질문하면 이 문서를 근거로 답합니다.', 'k');
+  }catch(e){
+    plog('✕ '+e.message, 'e');
+  }
+  btn.disabled = false;
+};
+
+$('#sbLoad').onclick = async ()=>{
+  if(!sbReady()) return alert('Supabase URL과 anon key를 먼저 입력하세요.');
+  $('#plog').innerHTML=''; plog('▸ Supabase에서 불러오는 중…');
+  try{
+    const r = await fetch(sb().url+'/rest/v1/kb_chunk?select=chunk_id,title,source,content,embedding,doc_name&limit=5000', { headers: sbHead() });
+    if(!r.ok) throw new Error('오류 '+r.status+' — '+(await r.text()).slice(0,240));
+    const rows = await r.json();
+    if(!rows.length){ plog('  · 저장된 조각이 없습니다', 'e'); return; }
+    KB = rows.map(c=>({ id:c.chunk_id, title:c.title, chapter:c.doc_name, source:c.source, text:c.content, embedding:c.embedding }));
+    setKBInfo('Supabase · 벡터 검색');
+    plog('  ✓ '+rows.length+'개 조각을 불러왔습니다', 'k');
+  }catch(e){ plog('✕ '+e.message, 'e'); }
+};
+
+$('#sbClear').onclick = async ()=>{
+  if(!sbReady()) return alert('Supabase 설정을 먼저 입력하세요.');
+  if(!confirm('Supabase의 kb_chunk 테이블에 저장된 모든 조각을 삭제합니다. 되돌릴 수 없습니다. 계속할까요?')) return;
+  try{
+    const r = await fetch(sb().url+'/rest/v1/kb_chunk?id=gt.0', { method:'DELETE', headers: sbHead() });
+    plog(r.ok ? '  ✓ 삭제되었습니다' : '✕ 삭제 실패 '+r.status, r.ok?'k':'e');
+  }catch(e){ plog('✕ '+e.message, 'e'); }
+};
+
+/* =======================================================
+   검색
+   ======================================================= */
+function bigrams(s){
+  s = String(s).replace(/[^가-힣a-zA-Z0-9]/g,'');
+  const out=[]; for(let i=0;i<s.length-1;i++) out.push(s.slice(i,i+2)); return out;
+}
+function lexical(q,k){
+  const qset = new Set(bigrams(q));
+  if(!qset.size) return [];
+  return KB.map(c=>{
+    const hg = new Set(bigrams((c.title||'')+' '+c.text));
+    let hit=0; qset.forEach(g=>{ if(hg.has(g)) hit++; });
+    const tg = new Set(bigrams(c.title||''));
+    let th=0; qset.forEach(g=>{ if(tg.has(g)) th++; });
+    return { c, score: hit/qset.size + (th/Math.max(1,tg.size))*1.4 };
+  }).filter(x=>x.score>0.06).sort((a,b)=>b.score-a.score).slice(0,k).map(x=>x.c);
+}
+async function retrieve(q,k){
+  k = k||6;
+  const hasVec = KB.length && KB[0].embedding;
+  if(hasVec && ($('#key').value.trim() || useEdge())){
+    try{
+      const [qv] = await embed([q], $('#embModel').value);
+      return KB.map(c=>({ c, s: c.embedding ? cosine(qv, c.embedding) : -1 }))
+               .sort((a,b)=>b.s-a.s).slice(0,k)
+               .filter(x=>x.s>0.15).map(x=>x.c);
+    }catch(e){ /* 임베딩 실패 시 텍스트 검색으로 대체 */ }
+  }
+  return lexical(q,k);
+}
+
+/* =======================================================
+   채팅
+   ======================================================= */
+function esc(s){ return String(s).replace(/[<>&]/g,m=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[m])); }
+function add(who, html){
+  const d = document.createElement('div');
+  d.className = 'msg '+who;
+  d.innerHTML = '<div class="bub">'+html+'</div>';
+  $('#chat').appendChild(d); $('#chat').scrollTop = $('#chat').scrollHeight;
+  return d;
+}
+const paras = t => esc(t).split(/\n+/).filter(Boolean).map(x=>'<p>'+x+'</p>').join('');
+const typing = ()=> add('ai','<span class="typing"><i></i><i></i><i></i></span>');
+
+function escalateHTML(reason){
+  return '<div class="esc">'+esc(reason)+
+    '<div style="margin-top:7px">📞 <b>'+OFFICE.name+'</b> · '+OFFICE.tel+
+    '<br><span style="opacity:.85">'+OFFICE.hours+'</span></div>'+
+    '<div class="btns"><button onclick="act(\'call\')">전화 안내 보기</button>'+
+    '<button onclick="act(\'ticket\')">1:1 문의 남기기</button></div></div>';
+}
+window.act = function(kind){
+  if(kind==='call'){
+    const h=new Date().getHours(), open = h>=9&&h<18;
+    add('ai', paras(open
+      ? '지금은 운영시간입니다. '+OFFICE.tel+' 로 전화하시면 바로 상담받으실 수 있습니다.'
+      : '지금은 운영시간이 아닙니다.\n'+OFFICE.name+' · '+OFFICE.tel+'\n다음 응대 가능 시각은 평일 오전 9시입니다.\n기다리기 어려우시면 「1:1 문의 남기기」로 지금 남겨두세요. 운영시간이 시작되면 순서대로 답변됩니다.'));
+  } else {
+    const p = prof();
+    add('ai', paras('1:1 문의가 접수되었습니다.\n대화 내용과 아래 조건이 자동으로 정리되어 담당자에게 전달됩니다. 상황을 다시 설명하실 필요가 없습니다.')
+      + '<div class="src"><b>첨부된 내 조건</b>'+esc(profLines(p)).split(String.fromCharCode(10)).join('<br>')+'<br>질문 내역 '+logs.length+'건</div>');
+  }
+};
+
+async function callLLM(q, ctx, p){
+  const sysTxt = $('#sysPrompt').value;
+  const userTxt = '<학생 조건>' + String.fromCharCode(10) + profLines(p) +
+    String.fromCharCode(10,10) + '<규정>' + String.fromCharCode(10) +
+    ctx.map(c=>'['+c.id+'] '+c.source+String.fromCharCode(10)+c.text).join(String.fromCharCode(10,10)) +
+    String.fromCharCode(10,10) + '<질문>' + String.fromCharCode(10) + q;
+  if(useEdge()){
+    const j = await edgeCall({ mode:'chat', model: modelName(), system: sysTxt, user: userTxt });
+    return j.result;
+  }
+  const body = {
+    model: modelName(), temperature: 0,
+    response_format: { type:'json_object' },
+    messages: [
+      { role:'system', content: sysTxt },
+      { role:'user', content: userTxt }
+    ]
+  };
+  const post = b => fetch('https://api.openai.com/v1/chat/completions', {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json', Authorization:'Bearer '+$('#key').value.trim() },
+    body: JSON.stringify(b)
+  });
+  let r = await post(body);
+  if(!r.ok){
+    const t = await r.text();
+    // 일부 최신 모델은 temperature를 받지 않습니다 — 빼고 한 번 더 시도
+    if(r.status===400 && /temperature/i.test(t)){
+      const b2 = { ...body }; delete b2.temperature;
+      r = await post(b2);
+      if(!r.ok) throw new Error('API 오류 '+r.status+' — '+(await r.text()).slice(0,300));
+    } else {
+      throw new Error('API 오류 '+r.status+' — '+t.slice(0,300));
+    }
+  }
+  const j = await r.json();
+  return JSON.parse(j.choices[0].message.content);
+}
+
+async function ask(q){
+  q = q.trim(); if(!q) return;
+  add('me', esc(q)); $('#q').value=''; $('#send').disabled = true;
+  const p = prof();
+  const t = typing();
+
+  try{
+    const ctx = await retrieve(q, 6);
+    if(!ctx.length){
+      t.remove();
+      add('ai', paras('학칙과 학사 안내문에서 이 질문에 해당하는 근거 문단을 찾지 못했습니다. 근거 없이 답을 지어내지 않는 것이 이 시스템의 원칙입니다.')
+        + escalateHTML('⚠️ 답변을 생성하지 않았습니다. 담당 부서로 연결해 드리겠습니다.'));
+      record(q,false,[]); $('#send').disabled=false; return;
+    }
+    if(!$('#key').value.trim() && !useEdge()){
+      t.remove();
+      add('ai', paras('API 키가 입력되지 않았습니다. 오른쪽 「설정」에 OpenAI API 키를 넣어 주세요.')
+        + '<div class="src"><b>참고 — 이 질문으로 검색된 근거 조문</b>'+ctx.map(c=>'· '+esc(c.source)).join('<br>')+'</div>');
+      $('#send').disabled=false; return;
+    }
+
+    const res = await callLLM(q, ctx, p);
+    t.remove();
+    const ids = ctx.map(c=>c.id);
+    const used = (res.used||[]).filter(u=> ids.some(i=> i===u || i.includes(u) || u.includes(i)));
+    const cited = used.length ? ctx.filter(c=> used.some(u=> c.id===u||c.id.includes(u)||u.includes(c.id))) : [];
+
+    if(res.answerable === false){
+      let h = paras(res.answer || '이 질문은 학칙만으로 답변드릴 수 없습니다.');
+      if(cited.length) h += '<div class="src"><b>확인한 근거 (여기에 답이 없었습니다)</b>'+cited.map(c=>'· '+esc(c.source)).join('<br>')+'</div>';
+      h += escalateHTML('⚠️ '+(res.reason||'근거가 없어 답변을 생성하지 않았습니다.')+' 추측으로 답하지 않습니다.');
+      add('ai', h); record(q,false,cited.map(c=>c.source));
+    } else {
+      let h = paras(res.answer);
+      if(cited.length){
+        h += '<div class="src"><b>근거</b>'+cited.map(c=>'· '+esc(c.source)+'<span class="q">'+esc(c.text.slice(0,150))+'…</span>').join('')+'</div>';
+      } else {
+        h += '<div class="esc">⚠️ 모델이 근거 조항을 특정하지 못했습니다. 이 답변은 확인이 필요합니다.'
+           + '<div class="btns"><button onclick="act(\'ticket\')">1:1 문의로 확인 요청</button></div></div>';
+      }
+      if(res.caution) h += '<div class="note">⚠️ '+esc(res.caution)+'</div>';
+      add('ai', h); record(q, cited.length>0, cited.map(c=>c.source));
+    }
+  }catch(e){
+    t.remove();
+    add('ai', paras('요청을 처리하지 못했습니다.\n'+e.message)
+      + '<div class="note">키가 올바른지, 모델명이 사용 가능한지 확인해 주세요. 잔액이 없거나 모델 접근 권한이 없으면 같은 오류가 납니다.</div>');
+  }
+  $('#send').disabled = false;
+}
+$('#send').onclick = ()=> ask($('#q').value);
+$('#q').onkeydown = e=>{ if(e.key==='Enter') ask($('#q').value); };
+document.querySelectorAll('.ex button').forEach(b=> b.onclick = ()=> ask(b.dataset.q));
+
+/* ---------- 로그 ---------- */
+function record(q, answerable, sources){
+  logs.push({ q, answerable, sources: sources.length?sources:['(근거 문단 미발견)'] });
+  renderDash();
+  if(!sbReady()) return;
+  const p = prof();
+  fetch(sb().url+'/rest/v1/question_log', {
+    method:'POST', headers:{ ...sbHead(), Prefer:'return=minimal' },
+    body: JSON.stringify({ question:q, campus:p.camp, grade:p.year, answerable, sources })
+  }).catch(()=>{});
+}
+$('#loadLogs').onclick = async ()=>{
+  if(!sbReady()) return alert('Supabase 설정을 먼저 입력하세요 (「지식베이스 구축」 탭).');
+  try{
+    const r = await fetch(sb().url+'/rest/v1/question_log?select=question,answerable,sources&limit=2000', { headers: sbHead() });
+    const rows = await r.json();
+    logs = rows.map(x=>({ q:x.question, answerable:x.answerable, sources:x.sources||['(근거 문단 미발견)'] }));
+    renderDash();
+  }catch(e){ alert('불러오기 실패: '+e.message); }
+};
+
+function renderDash(){
+  const n=logs.length, ok=logs.filter(x=>x.answerable).length, no=n-ok;
+  $('#s1').textContent=n; $('#s2').textContent=ok; $('#s3').textContent=no;
+  $('#s4').textContent = n ? Math.round(no/n*100)+'%' : '0%';
+  if(!n){ $('#dashBody').innerHTML = '<div class="empty">아직 질문이 없습니다.<br>「학생 화면」에서 몇 가지 물어보면 이곳에 집계됩니다.</div>'; return; }
+  const agg={};
+  logs.forEach(x=> (x.sources||[]).forEach(s=>{
+    if(!agg[s]) agg[s]={n:0,fail:0};
+    agg[s].n++; if(!x.answerable) agg[s].fail++;
+  }));
+  const rows = Object.entries(agg).sort((a,b)=>b[1].n-a[1].n);
+  if(!rows.length) return;
+  const max = rows[0][1].n;
+  let h='<table><tr><th style="width:40%">질문이 연결된 조항</th><th style="width:18%">건수</th><th>진단</th></tr>';
+  for(const [src,v] of rows){
+    h += '<tr><td>'+esc(src)+'</td><td><span class="bar" style="width:'+Math.max(12,v.n/max*70)+'px"></span> '+v.n+'</td><td>'
+      + (v.fail/v.n >= .5
+        ? '<span class="pill r">개정 필요</span> 답변 불가 '+v.fail+'/'+v.n+'건 — <b>조항 본문에 세칙 명칭·소재 또는 적용 기준 명시 필요</b>'
+        : '<span class="pill">양호</span> 근거 조항으로 답변 완료')
+      + '</td></tr>';
+  }
+  $('#dashBody').innerHTML = h+'</table>';
+}
+
+/* ---------- 탭 · 시계 ---------- */
+document.querySelectorAll('.tabs button').forEach(b=> b.onclick = ()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.pane').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); $('#p-'+b.dataset.p).classList.add('on');
+});
+(function tick(){
+  const d=new Date();
+  $('#clock').textContent = String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+  setTimeout(tick, 20000);
+})();
+
+add('ai', paras('안녕하세요. ERICA 학사 상담 AI입니다.\n행정실이 닫힌 시간에도 답해 드립니다. 다만 세 가지를 지킵니다.\n① 학칙 원문에 근거가 있을 때만 답합니다\n② 모든 답변에 근거 조항을 함께 보여드립니다\n③ 근거가 없으면 지어내지 않고 담당 부서로 연결합니다\n\n오른쪽에서 캠퍼스와 학년을 먼저 확인해 주세요. 같은 질문이라도 조건에 따라 답이 다릅니다.'));
+
+/* ---------- URL 파라미터 (문서용 화면 캡처) ----------
+   ?tab=kb|prompt|dash|how  → 해당 탭 열기
+   ?ask=질문                → 로드 직후 실제로 질문 전송
+   ?year=1&camp=서울        → 학생 조건 지정
+   실제 검색·답변 경로를 그대로 타므로 화면 내용은 실제 동작 결과입니다. */
+(function(){
+  const u = new URLSearchParams(location.search);
+  const camp = u.get('camp'); if(camp) $('#camp').value = camp;
+  const yr = u.get('year');   if(yr)  { $('#year').value = yr; }
+  const co = u.get('cohort');    if(co) $('#cohort').value = co;
+  const mt = u.get('major');     if(mt) $('#majorType').value = mt;
+  if(u.get('vol')==='1')  $('#vol').checked = true;
+  if(u.get('rotc')==='1') $('#rotc').checked = true;
+  updateCurr();
+  const tab = u.get('tab');
+  if(tab){ const b=document.querySelector('.tabs button[data-p="'+tab+'"]'); if(b) b.click(); }
+  const q = u.get('ask');
+  if(q) setTimeout(()=>ask(q), 700);
+})();
+
+</script>
+</body>
+</html>

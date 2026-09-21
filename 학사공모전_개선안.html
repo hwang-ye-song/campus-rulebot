@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>새벽 3시의 학사팀</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+    color: #16233a; -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm; height: 297mm; padding: 15mm 16mm 12mm;
+    page-break-after: always; position: relative; background: #fff;
+    display: flex; flex-direction: column;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* ---------- 공통 타이포 ---------- */
+  h2.ptitle {
+    font-size: 19pt; color: #0b2a7a; letter-spacing: -0.5px;
+    padding-bottom: 3mm; border-bottom: 2.5px solid #1a4fd6; margin-bottom: 5mm;
+  }
+  h2.ptitle small { display:block; font-size: 9.5pt; color:#5b6b86; font-weight: normal; margin-top:1.5mm; letter-spacing:0; }
+  h3 { font-size: 12pt; color: #1a4fd6; margin: 4.5mm 0 2mm; }
+  h3::before { content:''; display:inline-block; width:3px; height:12px; background:#1a4fd6; margin-right:5px; vertical-align:-1px; }
+  p { font-size: 10pt; line-height: 1.65; margin-bottom: 2mm; }
+  b, strong { color: #0b2a7a; }
+  ul { margin: 1mm 0 2mm 5mm; }
+  li { font-size: 10pt; line-height: 1.6; margin-bottom: 1.2mm; }
+  .muted { color: #6b7a94; }
+  .fine { font-size: 8.5pt; line-height: 1.5; color:#6b7a94; }
+
+  .pagenum { position:absolute; bottom:7mm; right:16mm; font-size:8.5pt; color:#9aa7bd; }
+  .runhead { position:absolute; top:7mm; right:16mm; font-size:8pt; color:#b4c0d4; letter-spacing:0.5px; }
+
+  /* ---------- 박스 ---------- */
+  .callout {
+    background:#eef3ff; border-left:4px solid #1a4fd6; padding:4mm 5mm; margin:3mm 0;
+    font-size:10.5pt; line-height:1.6;
+  }
+  .callout.warn { background:#fff3ef; border-left-color:#e05a2b; }
+  .callout.warn b { color:#c2410c; }
+  .quote {
+    background:#f6f8fc; border:1px solid #dbe3f2; border-radius:3px;
+    padding:3mm 4mm; margin:2mm 0; font-size:9.5pt; line-height:1.55; color:#3c4a63;
+  }
+  .quote .who { display:block; font-size:8.5pt; color:#8a97ad; margin-top:1.5mm; }
+
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:4mm; }
+  .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:3.5mm; }
+  .card { border:1px solid #d9e2f3; border-radius:5px; padding:4mm; background:#fcfdff; }
+  .card h4 { font-size:10.5pt; color:#0b2a7a; margin-bottom:1.5mm; }
+  .card p { font-size:9pt; line-height:1.55; margin:0; }
+  .card .num { font-size:8pt; color:#fff; background:#1a4fd6; border-radius:20px;
+               padding:0.6mm 2.4mm; display:inline-block; margin-bottom:1.5mm; }
+
+  table { width:100%; border-collapse:collapse; margin:2.5mm 0; font-size:9pt; }
+  th { background:#0b2a7a; color:#fff; padding:2.2mm 2.5mm; text-align:left; font-weight:600; }
+  td { border-bottom:1px solid #e2e8f4; padding:2.2mm 2.5mm; vertical-align:top; line-height:1.5; }
+  tr:nth-child(even) td { background:#f8fafe; }
+  td.em { color:#0b2a7a; font-weight:bold; }
+
+  .stat { display:flex; gap:4mm; margin:3mm 0; }
+  .stat div { flex:1; text-align:center; border:1px solid #d9e2f3; border-radius:5px; padding:3.5mm 2mm; background:#fcfdff; }
+  .stat .v { font-size:17pt; font-weight:bold; color:#1a4fd6; line-height:1.15; }
+  .stat .l { font-size:8.5pt; color:#5b6b86; margin-top:1.2mm; line-height:1.4; }
+
+  .tag { display:inline-block; font-size:8pt; background:#e3ebff; color:#1a4fd6;
+         border-radius:3px; padding:0.8mm 2mm; margin-right:1.5mm; }
+  .tag.red { background:#ffe6dc; color:#c2410c; }
+  .tag.gray { background:#eceff5; color:#66748c; }
+
+  /* ---------- 표지 ---------- */
+  .cover { background:linear-gradient(170deg,#f2f7ff 0%,#e6efff 55%,#dbe7ff 100%); justify-content:space-between; }
+  .cover .top { font-size:10pt; color:#1a4fd6; font-weight:bold; letter-spacing:0.3px; }
+  .cover h1 { font-size:37pt; color:#0b2a7a; line-height:1.2; letter-spacing:-2px; }
+  .cover h1 em { font-style:normal; color:#1a4fd6; }
+  .cover .sub { font-size:14pt; color:#2c3d5e; margin-top:5mm; line-height:1.55; letter-spacing:-0.5px; }
+  .cover .line { width:70mm; height:3px; background:#1a4fd6; margin:7mm 0; }
+  .cover .meta { font-size:9.5pt; color:#46587a; line-height:1.85; }
+  .cover .meta b { display:inline-block; width:22mm; color:#0b2a7a; }
+
+  /* ---------- 챗봇 목업 ---------- */
+  .phone { border:1.5px solid #c3d0e8; border-radius:9px; overflow:hidden; background:#fff; }
+  .phone .bar { background:#1a4fd6; color:#fff; font-size:8.5pt; padding:2.2mm 3mm; font-weight:bold; }
+  .phone .bar span { float:right; font-weight:normal; opacity:.85; font-size:7.5pt; }
+  .phone .body { padding:3mm; background:#f4f7fd; min-height:52mm; }
+  .bub { border-radius:7px; padding:2.2mm 3mm; font-size:8.3pt; line-height:1.55; margin-bottom:2mm; max-width:88%; }
+  .bub.u { background:#1a4fd6; color:#fff; margin-left:auto; border-bottom-right-radius:2px; }
+  .bub.a { background:#fff; border:1px solid #dde5f4; border-bottom-left-radius:2px; }
+  .bub.a .src { margin-top:1.8mm; padding-top:1.8mm; border-top:1px dashed #cfd9ec; font-size:7.3pt; color:#1a4fd6; line-height:1.45; }
+  .bub.a .warnrow { margin-top:1.8mm; padding:1.6mm 2mm; background:#fff4ec; border-radius:3px; font-size:7.3pt; color:#c2410c; line-height:1.45; }
+
+  /* 지면 압축 — 내용은 유지하고 여백/크기만 축소 */
+  .tight p, .tight li { font-size:9.2pt; line-height:1.52; }
+  .tight h3 { margin:3mm 0 1.5mm; font-size:11pt; }
+  .tight .card p { font-size:8.3pt; line-height:1.45; }
+  .tight .card h4 { font-size:9.8pt; }
+  .tight .stat { margin:2mm 0; }
+  .tight .stat div { padding:2.4mm 1.5mm; }
+  .tight .stat .v { font-size:13.5pt; }
+  .tight .stat .l { font-size:7.8pt; }
+  .tight .callout { padding:3mm 4mm; font-size:9.4pt; margin:2mm 0; }
+  .tight table { font-size:8.4pt; margin:2mm 0; }
+  .tight th, .tight td { padding:1.7mm 2mm; }
+  .tight .fine { font-size:8pt; line-height:1.45; }
+  .tight .grid3, .tight .grid2 { gap:3mm; }
+  .tight .card { padding:3.2mm; }
+  .shot{width:74%;margin-left:auto;margin-right:auto;border:1px solid #cdd8ec;border-radius:4px;display:block}
+  .flowstrip{width:100%;margin:2mm 0 3mm}
+  .cap{font-size:8pt;color:#6b7a94;margin-top:1.2mm;line-height:1.45}
+  .cap b{color:#0b2a7a}
+  .t10 p, .t10 li { font-size:8.9pt; line-height:1.47; }
+  .t10 li { margin-bottom:0.9mm; }
+  .t10 h3 { margin:2.6mm 0 1.2mm; }
+  .t10 .callout { padding:2.6mm 3.5mm; font-size:9pt; margin:1.8mm 0; }
+  .t10 .fine { font-size:7.6pt; line-height:1.42; }
+  .t10 ul { margin:0.8mm 0 1.5mm 5mm; }
+</style>
+</head>
+<body>
+
+<!-- ============ 1. 표지 ============ -->
+<div class="page cover">
+  <div>
+    <div class="top">2026학년도 AI 활용 학사제도 개선 아이디어 공모전</div>
+  </div>
+  <div>
+    <h1>새벽 3시의<br><em>학사팀</em></h1>
+    <div class="line"></div>
+    <div class="sub">
+      학생의 질문은 밤에 생기는데,<br>
+      답할 수 있는 창구는 낮에만 열려 있습니다.<br>
+      <b style="color:#1a4fd6">학칙을 근거로만 답하는 ERICA 학사 AI 상담 시스템</b>
+    </div>
+  </div>
+  <div>
+    <div class="meta">
+      <b>공모분야</b> 학사안내 · 수강신청 · 다전공 · 학적변동 전반<br>
+      <b>AI 활용범위</b> ① AI를 활용한 문제 분석 및 제도 개선안 도출<br>
+      <span style="display:inline-block;width:22mm"></span>② AI 시스템 구축 및 도입<br>
+      <b>제출일</b> 2026. 9. 21.
+    </div>
+  </div>
+</div>
+
+<!-- ============ 2. 한 장 요약 ============ -->
+<div class="page">
+  <div class="runhead">AI 활용 학사제도 개선 아이디어 공모전</div>
+  <h2 class="ptitle">한 장 요약
+    <small>무엇이 문제이고, 무엇을 바꾸자는 것인가</small></h2>
+
+  <div class="callout">
+    학사 문의는 <b>행정실이 닫힌 시간에 발생</b>하고, 그 공백을 <b>익명 커뮤니티의 추측성 답변</b>이 메우고 있습니다.
+    틀린 답의 비용은 답한 사람이 아니라 <b>학생 본인이 수강신청 실패·자격 미달·기한 도과로 떠안습니다.</b>
+  </div>
+
+  <h3>제안</h3>
+  <p>
+    ERICA 학칙·학사운영규정·이수요건 원문만을 근거로 답하고, <b>모든 답변에 조항 출처를 붙이며,
+    근거가 없으면 답하지 않고 담당 부서로 넘기는</b> 24시간 학사 상담 AI를 구축합니다.
+    나아가 이 시스템에 쌓이는 질문 로그를 <b>학칙 자체를 고치는 근거 데이터로 환류</b>시킵니다.
+  </p>
+
+  <h3>이 제안의 차별점 — 챗봇은 목적이 아니라 계측기입니다</h3>
+  <p>
+    질문이 반복해서 몰리는 조항은 <b>학생이 무지해서가 아니라 규정이 모호하기 때문</b>입니다.
+    본 시스템은 그 지점을 자동으로 집계해 <b>개정이 필요한 조항 목록</b>을 학사팀에 제공합니다.
+    즉 상담 창구를 만드는 데서 끝나지 않고, <b>규정 문장 자체를 개선하는 순환 구조</b>를 만듭니다.
+    이것이 "학생의 경험이 제도가 됩니다"라는 공모 취지에 대한 본 제안의 답입니다.
+  </p>
+
+  <div class="grid3" style="margin-top:4mm">
+    <div class="card">
+      <span class="num">문제</span>
+      <h4>시간의 공백</h4>
+      <p>질문이 생기는 시각과 답할 수 있는 시각이 어긋나 있습니다.</p>
+    </div>
+    <div class="card">
+      <span class="num">해결</span>
+      <h4>근거 인용 AI</h4>
+      <p>학칙 원문에서만 답을 생성하고 조항을 함께 제시합니다.</p>
+    </div>
+    <div class="card">
+      <span class="num">환류</span>
+      <h4>규정 개정</h4>
+      <p>질문이 몰린 조항을 모호 조항으로 지목해 개정을 제안합니다.</p>
+    </div>
+  </div>
+
+  <h3>기대 효과</h3>
+  <table>
+    <tr><th style="width:26%">구분</th><th>변화</th></tr>
+    <tr><td class="em">학생</td><td>새벽에도 근거 있는 답을 즉시 얻고, 잘못된 정보로 인한 학사상 불이익을 피합니다.</td></tr>
+    <tr><td class="em">학사팀</td><td>단순 반복 문의를 자동 처리해, 판단이 필요한 상담에 시간을 집중할 수 있습니다.</td></tr>
+    <tr><td class="em">대학</td><td>문의 데이터로 규정의 취약 지점을 상시 진단하는 <b>근거 기반 학사행정</b>을 확보합니다.</td></tr>
+  </table>
+  <div class="pagenum">2</div>
+</div>
+
+<!-- ============ 3. 문제 ① 시간의 공백 ============ -->
+<div class="page">
+  <div class="runhead">AI 활용 학사제도 개선 아이디어 공모전</div>
+  <h2 class="ptitle">문제 ① — 질문의 시각과 응답의 시각이 어긋나 있습니다
+    <small>학사 상담은 제공되지 않는 것이 아니라, 필요한 시간에 제공되지 않습니다</small></h2>
+
+  <p>
+    학사 문의는 아무 때나 생기지 않습니다. <b>수강신청 직전, 정정 기간 마지막 날 밤, 휴학 여부를 고민하는 새벽,
+    졸업사정 결과를 확인한 직후</b>에 집중됩니다. 그런데 이 시각은 모두 행정실 운영시간 밖입니다.
+  </p>
+
+  <svg viewBox="0 0 640 178" style="width:100%;margin:3mm 0 1mm">
+    <text x="0" y="12" font-size="11" font-weight="bold" fill="#0b2a7a" font-family="Malgun Gothic">하루 24시간 — 답할 수 있는 시간과 묻고 싶은 시간</text>
+    <!-- 축 -->
+    <line x1="30" y1="108" x2="620" y2="108" stroke="#c3cee2" stroke-width="1.2"/>
+    <g font-size="8.5" fill="#8a97ad" font-family="Malgun Gothic" text-anchor="middle">
+      <text x="30" y="122">0시</text><text x="177" y="122">6시</text>
+      <text x="325" y="122">12시</text><text x="472" y="122">18시</text><text x="618" y="122">24시</text>
+    </g>
+    <!-- 운영시간 막대 -->
+    <rect x="251" y="34" width="196" height="20" rx="4" fill="#1a4fd6"/>
+    <text x="349" y="48" font-size="9" fill="#fff" text-anchor="middle" font-family="Malgun Gothic" font-weight="bold">행정실 운영 09–18시</text>
+    <text x="30" y="48" font-size="9" fill="#9aa7bd" font-family="Malgun Gothic">응답 가능</text>
+    <!-- 닫힌 구간 -->
+    <rect x="30" y="34" width="221" height="20" rx="4" fill="#f0f2f7"/>
+    <rect x="447" y="34" width="173" height="20" rx="4" fill="#f0f2f7"/>
+    <text x="140" y="48" font-size="8.5" fill="#97a3b8" text-anchor="middle" font-family="Malgun Gothic">닫힘</text>
+    <text x="533" y="48" font-size="8.5" fill="#97a3b8" text-anchor="middle" font-family="Malgun Gothic">닫힘</text>
+    <!-- 질문 발생 곡선 -->
+    <path d="M30,100 C90,96 120,60 160,66 C200,72 230,92 270,94 C310,96 350,90 390,86 C430,82 470,70 510,56 C550,42 580,32 620,30"
+          fill="none" stroke="#e05a2b" stroke-width="2.2" stroke-dasharray="5,3"/>
+    <text x="30" y="86" font-size="9" fill="#c2410c" font-family="Malgun Gothic" font-weight="bold">질문 발생량(추정)</text>
+    <!-- 공백 강조 -->
+    <rect x="447" y="30" width="173" height="78" fill="#e05a2b" opacity="0.07"/>
+    <rect x="30" y="30" width="221" height="78" fill="#e05a2b" opacity="0.07"/>
+    <text x="533" y="146" font-size="9.5" fill="#c2410c" text-anchor="middle" font-family="Malgun Gothic" font-weight="bold">질문은 늘어나는데 창구는 닫혀 있는 구간</text>
+    <text x="140" y="146" font-size="9.5" fill="#c2410c" text-anchor="middle" font-family="Malgun Gothic" font-weight="bold">〃</text>
+    <text x="30" y="170" font-size="7.5" fill="#9aa7bd" font-family="Malgun Gothic">※ 점선 곡선은 실제 로그 미확보 구간으로, 수강신청·정정 일정을 근거로 한 가정치입니다(본문 10쪽 한계 참조).</text>
+  </svg>
+
+  <h3>공식 채널도 학생을 대신해 골라주지 않습니다</h3>
+  <p>
+    시간만 문제가 아닙니다. 한양대 포털 <b>수강안내 게시판</b>을 직접 확인한 결과,
+    <b>안내문 25건이 캠퍼스·학부·대학원 구분 없이 한 목록에 나열</b>되어 있었습니다.
+    서울캠퍼스 학부와 13개 대학원의 안내문이 섞여 있고,
+    <b>ERICA 학부생에게 해당하는 것은 25건 중 단 1건</b>이었습니다.
+  </p>
+  <table style="margin-bottom:2mm">
+    <tr><th style="width:30%">수강안내 게시판 실태</th><th>확인 내용 <span style="font-weight:normal">(2026. 9. 21. 조회)</span></th></tr>
+    <tr><td class="em">전체 게시물</td><td><b>25건</b> — 서울·ERICA, 학부·대학원 혼재</td></tr>
+    <tr><td class="em">ERICA 학부 해당</td><td><b>1건</b> (전체의 4%) — 「2026학년도 2학기 ERICA캠퍼스 수강신청 안내문」</td></tr>
+    <tr><td class="em" style="color:#c2410c">지난 학기·연도 안내문</td><td><b>「2020학년도 1학기」, 「2022-1」, 「2025-1학기」, 「2026-1학기」 등이 현재 목록에 그대로 게시</b></td></tr>
+  </table>
+  <div class="callout warn">
+    학생이 목록에서 <b>철 지난 안내문을 잘못 열면, 몇 년 전 기준을 현재 규정으로 읽게 됩니다.</b>
+    앞서 지적한 "커뮤니티의 오래된 답변"과 <b>공식 채널이 같은 구조적 결함</b>을 갖고 있는 것입니다.
+    정보가 없는 것이 아니라, <b>내게 적용되는 정보를 골라내는 일이 온전히 학생의 몫</b>으로 남아 있습니다.
+  </div>
+
+  <h3>그 시간에 학생이 치르는 비용</h3>
+  <p>
+    학사 결정에는 <b>되돌릴 수 없는 기한</b>이 붙어 있습니다. 수강신청 정정 기간, 다전공 신청 마감,
+    휴학·복학 신청 시한은 하루만 지나도 다음 학기로 밀립니다. 밤에 생긴 의문을 다음 날 낮까지
+    미룰 수 없는 경우가 많고, <b>그래서 학생은 기다리는 대신 다른 곳에 묻습니다.</b>
+  </p>
+  <div class="pagenum">3</div>
+</div>
+
+<!-- ============ 4. 문제 ② 대체재의 실패 ============ -->
+<div class="page">
+  <div class="runhead">AI 활용 학사제도 개선 아이디어 공모전</div>
+  <h2 class="ptitle">문제 ② — 그 공백을 메우는 것이 익명 커뮤니티입니다
+    <small>답은 이미 유통되고 있습니다. 근거가 없을 뿐입니다</small></h2>
+
+  <p>
+    학생들은 답을 못 얻는 게 아닙니다. <b>에브리타임 등 익명 커뮤니티에서 이미 답을 얻고 있습니다.</b>
+    문제는 그 답의 성격입니다.
+  </p>
+
+  <div class="grid2" style="margin:3mm 0">
+    <div class="card" style="border-color:#f3c4ae;background:#fffaf7">
+      <h4 style="color:#c2410c">현재 — 익명 커뮤니티</h4>
+      <p style="margin-bottom:1.5mm"><span class="tag red">근거 없음</span><span class="tag red">책임 없음</span></p>
+      <p>
+        · 답변자는 같은 학생이며 규정을 확인하지 않습니다<br>
+        · <b style="color:#c2410c">과거 학번 기준의 답</b>이 현재 교육과정에 그대로 적용됩니다<br>
+        · 틀려도 정정되지 않고 검색으로 계속 재유통됩니다<br>
+        · 답변자는 아무 책임을 지지 않습니다
+      </p>
+    </div>
+    <div class="card" style="border-color:#b9cdf5;background:#f7faff">
+      <h4>제안 — 학칙 근거 AI</h4>
+      <p style="margin-bottom:1.5mm"><span class="tag">조항 인용</span><span class="tag">출처 추적</span></p>
+      <p>
+        · 학칙·학사운영규정 원문에서만 답을 생성합니다<br>
+        · <b>답변마다 근거 조항과 문서명을 함께 표시</b>합니다<br>
+        · 학번·교육과정 연도를 반영해 적용 기준을 구분합니다<br>
+        · 근거가 없으면 답하지 않고 담당 부서로 연결합니다
+      </p>
+    </div>
+  </div>
+
+  <h3>왜 틀린 답이 반복되는가 — 학칙이 답을 담고 있지 않습니다</h3>
+  <p>
+    학생이 성실하게 학칙을 펴도 답을 찾지 못하는 경우가 많습니다. <b>한양대학교 학칙(2024.10.31. 개정)</b>
+    원문을 직접 분석한 결과, 학생 관심이 가장 큰 조항일수록 <b>실질 내용을 다른 규정으로 넘기고 있었습니다.</b>
+  </p>
+  <div class="quote">
+    <b>제49조(복수전공, 다중전공)</b><br>
+    ① 복수전공 이수 희망자는 총장의 승인을 받아 복수전공을 이수할 수 있다. <b>복수전공에 대한 세칙은 따로 이를 정한다.</b><br>
+    ② 다중전공 … <b>다중전공에 관한 세칙은 따로 이를 정한다.</b><br>
+    ④ … 이에 대한 <b>세부사항은 따로 정한다.</b>
+    <span class="who">— 한양대학교 학칙(2024.10.31. 개정) 제49조 전문</span>
+  </div>
+  <p>
+    <b>조항 전체가 위임으로만 이루어져 있습니다.</b> 이수 학점도, 신청 자격도, 포기 절차도 학칙에는 없습니다.
+    학생은 "세칙"이 어느 문서인지부터 다시 찾아야 하고, 그 탐색에 실패하면 커뮤니티로 향합니다.
+  </p>
+
+  <h3>같은 질문, 캠퍼스에 따라 다른 답 — 오답이 발생하는 지점</h3>
+  <div class="quote">
+    <b>제24조(휴학)</b> ① … 휴학할 수 있다. <b>다만, 다음 각 호의 경우 휴학할 수 없으며</b> 휴학이 가능한 사유와 절차에 대한 사항은 <b>별도로 정한다.</b><br>
+    1. <b>서울캠퍼스 학생은</b> 질병, 입대 또는 외국인 유학생의 어학기준 미충족의 사유를 제외한 입학 후 <b>첫 번째 학기</b>의 경우<br>
+    2. <b>ERICA캠퍼스 학생은</b> … 입학 후 <b>첫 번째 학기와 두 번째 학기</b>의 경우
+    <span class="who">— 한양대학교 학칙(2024.10.31. 개정) 제24조 제1항</span>
+  </div>
+  <div class="callout warn">
+    <b>"1학년 때 휴학할 수 있나요?"</b>에 대한 정답은 캠퍼스에 따라 다릅니다.
+    <b>ERICA 학생은 두 번째 학기까지 휴학할 수 없습니다.</b> 익명 커뮤니티에는 서울캠퍼스 기준 답변이
+    함께 유통되며, 이를 믿고 신청한 ERICA 학생은 <b>휴학 신청이 반려되어 한 학기를 잃습니다.</b>
+    답변자는 아무 책임을 지지 않고, 비용은 전적으로 학생이 부담합니다.
+  </div>
+  <p class="fine">
+    ※ 이처럼 학사 규정의 오답은 단순한 불편이 아니라 <b>학적상 불이익</b>으로 직결됩니다.
+    본 제안이 "근거 없는 답을 하지 않는 것"을 제1원칙으로 삼는 이유입니다.
+  </p>
+  <div class="pagenum">4</div>
+</div>
+
+<!-- ============ 5. AI 문제 분석 ============ -->
+<div class="page tight">
+  <div class="runhead">AI 활용 학사제도 개선 아이디어 공모전</div>
+  <h2 class="ptitle">AI를 활용한 문제 분석 — 실제 수행 결과
+    <small>공모 요강 AI 활용범위 ① — 문제 분석 및 제도 개선안 도출</small></h2>
+
+  <p>
+    "규정이 모호하다"는 주장은 인상이 아니라 계측의 대상입니다. 본 제안은 <b>한양대학교 학칙(2024.10.31. 개정)
+    전문 61쪽을 텍스트로 추출한 뒤, 조문 단위로 분해하여 모호성 지표를 실제로 측정</b>했습니다.
+  </p>
+
+  <h3>측정 결과 — 학칙은 스스로 답하지 않습니다</h3>
+  <div class="stat">
+    <div><div class="v">87</div><div class="l">전체 조문 수</div></div>
+    <div><div class="v">60</div><div class="l">"따로 정한다 · 별도로 정한다"<br><b>타 규정 위임</b></div></div>
+    <div><div class="v">71</div><div class="l">"다만, …"<br><b>단서 · 예외</b></div></div>
+    <div><div class="v">86</div><div class="l">"~할 수 있다"<br><b>재량 표현</b></div></div>
+  </div>
+  <div class="callout">
+    조문이 <b>87개</b>인데 <b>다른 규정으로 넘기는 문구가 60건</b>입니다. 학생이 학칙을 펼치면
+    상당수의 조항에서 <b>"세부사항은 따로 정한다"</b>를 만나고, 그 "따로"가 어느 문서인지는
+    학칙이 알려주지 않습니다. <b>규정을 확인하려는 학생조차 확인에 실패하도록 설계되어 있는 셈</b>입니다.
+  </div>
+
+  <h3>조항별 모호성 진단표 — 학생 관련 조항 상위</h3>
+  <p class="fine" style="margin-bottom:1.5mm">
+    위임·단서·"불구하고" 표현의 출현 빈도로 산출. 부칙·경과조치 조항은 제외하고 학생 직접 관련 조항만 표시.
+  </p>
+  <table>
+    <tr><th style="width:30%">조항</th><th style="width:9%">위임</th><th style="width:9%">단서</th><th>진단 — 학생에게 무엇이 문제인가</th></tr>
+    <tr><td class="em">제31조(교육과정)</td><td>9</td><td>0</td><td>인증과정·특화과정이 모두 별도 문서. <b>내 전공에 무엇이 적용되는지 학칙만으로 판단 불가</b></td></tr>
+    <tr><td class="em">제24조(휴학)</td><td>3</td><td>1</td><td><b>캠퍼스별로 요건이 다르고</b> 학과별 예외까지 중첩. 오답 시 신청 반려</td></tr>
+    <tr><td class="em">제20조(전과(부))</td><td>4</td><td>0</td><td>허용 범위 20% 원칙 외 <b>세부 기준 전부 위임</b></td></tr>
+    <tr><td class="em">제49조(복수전공·다중전공)</td><td>3</td><td>0</td><td><b>조항 전체가 위임</b>. 이수 요건이 학칙에 존재하지 않음</td></tr>
+    <tr><td class="em">제28조(제적)</td><td>3</td><td>0</td><td>학과별 추가 제적 사유가 별도 규정. <b>불이익이 가장 큰 조항</b></td></tr>
+    <tr><td class="em">제33조(이수학점)</td><td>1</td><td>1</td><td>학칙은 <b>"20학점"</b>이라 적었으나 실제 상한은 <b>18·20·22·23학점</b>으로 갈림(아래 참조)</td></tr>
+  </table>
+
+  <h3>이 표가 곧 제도 개선안입니다</h3>
+  <p>
+    각 행은 구체적 개정 문안으로 이어집니다. 예를 들어 <b>제49조에는 "세칙"의 명칭과 소재를 함께
+    적시</b>하고, <b>제24조에는 캠퍼스별 요건 차이를 표로 병기</b>하며, <b>제28조에는 학과별 추가
+    제적 사유의 존재를 본문에서 먼저 고지</b>하는 방식입니다. 규정의 내용을 바꾸지 않고
+    <b>찾아갈 수 있게 만드는 것만으로</b> 상당수의 반복 질문이 사라집니다.
+  </p>
+
+  
+  <div class="pagenum">5</div>
+</div>
+
+<!-- ============ 6. 해결안 3원칙 ============ -->
+<div class="page tight t10">
+  <div class="runhead">AI 활용 학사제도 개선 아이디어 공모전</div>
+  <h2 class="ptitle">해결안 — 학칙을 근거로만 답하는 상담 AI
+    <small>일반 챗봇과 무엇이 다른가</small></h2>
+
+  <p>
+    생성형 AI를 학사 상담에 그대로 쓰면 <b>그럴듯하지만 틀린 답(환각)</b>이 나옵니다. 학사 영역에서
+    틀린 답은 곧 학생의 불이익이므로, 본 시스템은 <b>답변 생성 방식 자체를 제약</b>합니다.
+  </p>
+
+  <h3>설계 3원칙</h3>
+  <div class="grid3" style="margin-bottom:3mm">
+    <div class="card">
+      <span class="num">원칙 1</span>
+      <h4>근거 없으면 답하지 않는다</h4>
+      <p>근거를 찾지 못하면 답을 지어내지 않고 <b>학사운영팀 전화번호 안내와 1:1 문의 접수</b>로
+      넘깁니다. <b>모른다고 말할 수 있어야</b> 나머지 답변이 신뢰를 얻습니다.</p>
+    </div>
+    <div class="card">
+      <span class="num">원칙 2</span>
+      <h4>답변에 조항을 붙인다</h4>
+      <p>모든 답변에 <b>문서명·조항·게시일</b>을 함께 표시합니다. 학생이 원문을 직접 확인할 수 있어야
+      하며, 이는 답변에 <b>책임 소재</b>를 부여합니다.</p>
+    </div>
+    <div class="card">
+      <span class="num">원칙 3</span>
+      <h4>학적정보로 답을 확정한다</h4>
+      <p>로그인과 동시에 <b>학번·학년·전공 유형·추가 신청 사항</b>을 학사정보시스템에서 불러와,
+      <b>그 학생에게 적용되는 값만</b> 계산해 답합니다. 학생이 조건을 되짚어 볼 필요가 없습니다.</p>
+    </div>
+  </div>
+
+  <h3>답하지 못할 때의 설계 — 이 시스템의 두 번째 축</h3>
+  <p>
+    학칙만으로 판단할 수 없는 질문은 반드시 생깁니다. 본 시스템은 이를 실패가 아니라
+    <b>정상 동작</b>으로 규정하고, 두 경로로 인계합니다.
+  </p>
+  <div class="grid2" style="margin-bottom:2mm">
+    <div class="card">
+      <h4>① 전화 안내 — 지금 바로 급한 경우</h4>
+      <p><b>담당 부서와 전화번호, 운영시간을 즉시 표시</b>합니다. 어느 부서로 걸어야 하는지
+      몰라 헤매는 시간을 없앱니다. 운영시간이 지난 시각이면 <b>다음 응대 가능 시각</b>을 함께 안내합니다.</p>
+    </div>
+    <div class="card">
+      <h4>② 1:1 문의 — 새벽에도 남길 수 있게</h4>
+      <p>대화 내용과 학생의 조건(학번·교육과정·전공)이 <b>자동으로 정리되어 문의 양식에 담깁니다.</b>
+      학생은 상황을 다시 설명할 필요가 없고, 담당자는 <b>맥락이 정리된 문의</b>를 받아 응답 시간이 줄어듭니다.</p>
+    </div>
+  </div>
+  <p class="fine" style="margin-bottom:2mm">
+    ※ 지금은 닫힌 시간의 질문이 커뮤니티로 흘러가 기록되지 않지만, 이 경로를 만들면
+    <b>모든 질문이 학교의 데이터로 남아</b> 규정 개선에 쓰입니다.
+  </p>
+  <h3>근거 기반 설계의 효과는 검증되어 있습니다</h3>
+  <p>
+    규정 원문을 검색해 근거로 삼는 검색증강생성(RAG) 방식을 적용한 선행 연구에서,
+    <b>환각 발생률이 31.7%에서 6.6%로 감소</b>한 것으로 보고되었습니다. 또한 학생의 프로필을
+    반영한 대학 학사 상담 챗봇 연구(proFILL)는 <b>프로필을 고려한 응답이 일반 RAG보다 선호되며,
+    오픈 웨이트 모델을 이용한 교내 자체 구축도 비용 효율적으로 가능</b>함을 보였습니다.
+  </p>
+  <div class="stat">
+    <div><div class="v">31.7% → 6.6%</div><div class="l">RAG 적용 시 환각 발생률 감소<br>(선행 연구 보고)</div></div>
+    <div><div class="v">교내 구축</div><div class="l">오픈 웨이트 모델 기반<br>온프레미스 운영 가능</div></div>
+    <div><div class="v">24시간</div><div class="l">행정실 운영시간과 무관한<br>상시 응답</div></div>
+  </div>
+
+  <div class="callout warn">
+    <b>다만 6.6%는 0%가 아닙니다.</b> 따라서 본 시스템은 AI 답변을 <b>최종 결정이 아니라 안내</b>로
+    규정하고, 학적 변동·졸업사정 등 <b>되돌릴 수 없는 사안은 반드시 담당 부서 확인을 거치도록</b>
+    설계했습니다. 이 경계를 명시하는 것이 도입의 전제 조건입니다.
+  </div>
+  <div class="pagenum">6</div>
+</div>
+
+<!-- ============ 7. 화면 ============ -->
+<div class="page tight">
+  <div class="runhead">AI 활용 학사제도 개선 아이디어 공모전</div>
+  <h2 class="ptitle">프로토타입 — 질문에서 규정 개선까지
+    <small>설계안이 아니라 실제로 동작하는 화면입니다</small></h2>
+
+  <svg viewBox="0 0 640 74" class="flowstrip">
+    <defs><marker id="fa" markerWidth="8" markerHeight="8" refX="7" refY="2.6" orient="auto">
+      <path d="M0,0 L0,5.2 L7,2.6 z" fill="#1a4fd6"/></marker></defs>
+    <g font-family="Malgun Gothic">
+      <rect x="0" y="16" width="108" height="34" rx="5" fill="#1a4fd6"/>
+      <text x="54" y="31" font-size="9" fill="#fff" text-anchor="middle" font-weight="bold">① 질문</text>
+      <text x="54" y="43" font-size="7.2" fill="#cfe0ff" text-anchor="middle">새벽에도 입력</text>
+
+      <rect x="133" y="16" width="108" height="34" rx="5" fill="#fff" stroke="#b9cdf5" stroke-width="1.3"/>
+      <text x="187" y="31" font-size="9" fill="#0b2a7a" text-anchor="middle" font-weight="bold">② 근거 검색</text>
+      <text x="187" y="43" font-size="7.2" fill="#5b6b86" text-anchor="middle">학칙·안내문 261조각</text>
+
+      <rect x="266" y="16" width="108" height="34" rx="5" fill="#fff" stroke="#b9cdf5" stroke-width="1.3"/>
+      <text x="320" y="31" font-size="9" fill="#0b2a7a" text-anchor="middle" font-weight="bold">③ 답변 · 인계</text>
+      <text x="320" y="43" font-size="7.2" fill="#5b6b86" text-anchor="middle">조항 인용 / 전화·문의</text>
+
+      <rect x="399" y="16" width="108" height="34" rx="5" fill="#fff" stroke="#b9cdf5" stroke-width="1.3"/>
+      <text x="453" y="31" font-size="9" fill="#0b2a7a" text-anchor="middle" font-weight="bold">④ 로그 적재</text>
+      <text x="453" y="43" font-size="7.2" fill="#5b6b86" text-anchor="middle">식별정보 없이</text>
+
+      <rect x="532" y="16" width="108" height="34" rx="5" fill="#0b2a7a"/>
+      <text x="586" y="31" font-size="9" fill="#fff" text-anchor="middle" font-weight="bold">⑤ 규정 개정</text>
+      <text x="586" y="43" font-size="7.2" fill="#a9c2f5" text-anchor="middle">질문이 사라짐</text>
+
+      <line x1="110" y1="33" x2="129" y2="33" stroke="#1a4fd6" stroke-width="1.4" marker-end="url(#fa)"/>
+      <line x1="243" y1="33" x2="262" y2="33" stroke="#1a4fd6" stroke-width="1.4" marker-end="url(#fa)"/>
+      <line x1="376" y1="33" x2="395" y2="33" stroke="#1a4fd6" stroke-width="1.4" marker-end="url(#fa)"/>
+      <line x1="509" y1="33" x2="528" y2="33" stroke="#1a4fd6" stroke-width="1.4" marker-end="url(#fa)"/>
+    </g>
+  </svg>
+
+  <h3>① ② 질문을 받고, 학칙 원문에서 근거를 찾습니다</h3>
+  <img src="prototype/shots/01_chat.png" class="shot" alt="프로토타입 학생 화면">
+  <p class="cap">
+    <b>실제 실행 화면.</b> 25학번 3학년 다중전공 조건에서 <b>"23학점 들을 수 있나요?"</b>를 물었을 때,
+    지식베이스 261개 조각에서 <b>학칙 제33조(이수학점)</b>와 <b>안내문 05 CREDIT LIMIT</b>을 함께 찾아
+    답한 결과입니다. 오른쪽 학적 프리셋을 바꾸면 <b>같은 질문의 답이 갈립니다</b> —
+    캠퍼스·입학 학번·전공 유형·추가 신청이 각각 하나씩 걸리도록 구성했습니다.
+  </p>
+
+  <h3>③ 같은 질문, 여섯 갈래의 정답 — 위 화면이 보여주는 것</h3>
+  <p>
+    <b>"23학점 들을 수 있나요?"</b> 학칙 제33조는 <b>"20학점을 초과하지 못한다"</b>고만 적혀 있지만,
+    실제 적용은 학적에 따라 이렇게 갈립니다.
+  </p>
+  <table style="margin:2mm 0">
+    <tr><th style="width:52%">학적 조건</th><th>수강 가능 최대 학점</th></tr>
+    <tr><td>25학번 이하 · 단일전공</td><td class="em">20학점 — <b>"안 됩니다"</b></td></tr>
+    <tr><td>25학번 이하 · <b>다전공자가 타 학과 전공 수강</b></td><td class="em">+3 → <b>23학점 — "됩니다"</b></td></tr>
+    <tr><td>+ 사회봉사 신청 / + ROTC 필수 교과목</td><td>각각 +1 / +2 추가</td></tr>
+    <tr><td>26학번 이후 · 1·2학년 / 3학년 이상</td><td>20학점 / <b>18학점</b></td></tr>
+    <tr><td>약학과 / 스마트융합공학부</td><td>22학점 / 23학점</td></tr>
+  </table>
+  <div class="callout warn">
+    익명 커뮤니티에서는 이 질문에 <b>"20학점까지야"</b>라는 답이 돌아옵니다. 틀린 말은 아니지만
+    <b>다전공자에게는 틀린 답</b>이고, 26학번 3학년에게도 틀린 답입니다. 그리고 상한을 넘기거나
+    최소학점에 미달하면 <b>수강신청 전부가 무효화되고 해당 학기 평점이 0.00으로 처리</b>됩니다.
+    <b>학적정보 없이는 누구도 이 질문에 정확히 답할 수 없습니다.</b>
+  </div>
+
+  <div class="callout">
+    <b>답은 시점에 따라서도 뒤집힙니다.</b> 안내문은 <b>"개강 후 정정기간에 학과 이수제한이 풀리니
+    이때 시도해보시길 바랍니다"</b>라고 적고 있습니다. 평소 막혀 있던 타 학과 전공과목이
+    정정기간에는 열린다는 뜻입니다. 반대로 교차수강신청은 <b>"정정기간에는 수강 취소만 가능"</b>,
+    교직과목은 <b>"수강신청 시 정정기간 수강 취소가 됨"</b>입니다.
+    <b>같은 강좌가 시점에 따라 신청 가능과 불가능으로 뒤집히고,</b> 다중전공생과 타 학과 수강
+    희망자의 질문이 바로 이 지점에 몰립니다. 학적정보와 신청 시점을 함께 봐야만 답할 수 있습니다.
+  </div>
+
+  <p class="fine" style="margin-bottom:2mm">
+    ※ 근거를 찾지 못하거나 개별 학적 확인이 필요하면 답변을 생성하지 않고
+    <b>학사운영팀 031-400-4231 · 평일 09–18시</b> 안내와 1:1 문의 접수로 인계합니다(6쪽 참조).
+  </p>
+  <div class="pagenum">7</div>
+</div>
+
+<!-- ============ 8. 시스템 구조 ============ -->
+<div class="page">
+  <div class="runhead">AI 활용 학사제도 개선 아이디어 공모전</div>
+  <h2 class="ptitle">시스템 구조와 환류 루프
+    <small>공모 요강 AI 활용범위 ② — AI 시스템 구축 및 도입</small></h2>
+
+  <svg viewBox="0 0 640 250" style="width:100%;margin:1mm 0 2mm">
+    <defs>
+      <marker id="ar" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#1a4fd6"/>
+      </marker>
+      <marker id="aro" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#e05a2b"/>
+      </marker>
+    </defs>
+    <g font-family="Malgun Gothic">
+      <!-- 학생 -->
+      <rect x="6" y="80" width="92" height="46" rx="6" fill="#1a4fd6"/>
+      <text x="52" y="100" font-size="10.5" fill="#fff" text-anchor="middle" font-weight="bold">학생</text>
+      <text x="52" y="115" font-size="8" fill="#cfe0ff" text-anchor="middle">24시간 질문</text>
+
+      <!-- 질의 이해 -->
+      <rect x="128" y="74" width="104" height="58" rx="6" fill="#fff" stroke="#b9cdf5" stroke-width="1.4"/>
+      <text x="180" y="94" font-size="9.5" fill="#0b2a7a" text-anchor="middle" font-weight="bold">질의 이해</text>
+      <text x="180" y="108" font-size="7.5" fill="#5b6b86" text-anchor="middle">학번·교육과정</text>
+      <text x="180" y="119" font-size="7.5" fill="#5b6b86" text-anchor="middle">전공 조건 확인</text>
+
+      <!-- 규정 검색 -->
+      <rect x="262" y="74" width="104" height="58" rx="6" fill="#fff" stroke="#b9cdf5" stroke-width="1.4"/>
+      <text x="314" y="94" font-size="9.5" fill="#0b2a7a" text-anchor="middle" font-weight="bold">규정 검색</text>
+      <text x="314" y="108" font-size="7.5" fill="#5b6b86" text-anchor="middle">학칙·학사운영규정</text>
+      <text x="314" y="119" font-size="7.5" fill="#5b6b86" text-anchor="middle">원문 근거 추출</text>
+
+      <!-- 지식원 -->
+      <rect x="262" y="8" width="104" height="48" rx="6" fill="#eef3ff" stroke="#b9cdf5" stroke-width="1.2" stroke-dasharray="4,3"/>
+      <text x="314" y="26" font-size="8.5" fill="#0b2a7a" text-anchor="middle" font-weight="bold">규정 원문 저장소</text>
+      <text x="314" y="39" font-size="7.3" fill="#5b6b86" text-anchor="middle">학칙 · 학사운영규정</text>
+      <text x="314" y="50" font-size="7.3" fill="#5b6b86" text-anchor="middle">이수요건 · 학사공지</text>
+      <line x1="314" y1="56" x2="314" y2="72" stroke="#1a4fd6" stroke-width="1.4" marker-end="url(#ar)"/>
+
+      <!-- 답변 생성 -->
+      <rect x="396" y="74" width="104" height="58" rx="6" fill="#fff" stroke="#b9cdf5" stroke-width="1.4"/>
+      <text x="448" y="94" font-size="9.5" fill="#0b2a7a" text-anchor="middle" font-weight="bold">답변 생성</text>
+      <text x="448" y="108" font-size="7.5" fill="#5b6b86" text-anchor="middle">근거 조항 인용</text>
+      <text x="448" y="119" font-size="7.5" fill="#5b6b86" text-anchor="middle">출처 필수 표기</text>
+
+      <!-- 분기 -->
+      <rect x="530" y="46" width="104" height="44" rx="6" fill="#eaf1ff" stroke="#b9cdf5" stroke-width="1.2"/>
+      <text x="582" y="64" font-size="9" fill="#0b2a7a" text-anchor="middle" font-weight="bold">즉시 안내</text>
+      <text x="582" y="78" font-size="7.5" fill="#5b6b86" text-anchor="middle">근거 있는 답변</text>
+
+      <rect x="530" y="112" width="104" height="44" rx="6" fill="#fff3ef" stroke="#f3c4ae" stroke-width="1.2"/>
+      <text x="582" y="130" font-size="9" fill="#c2410c" text-anchor="middle" font-weight="bold">담당 부서 연결</text>
+      <text x="582" y="144" font-size="7.5" fill="#c2410c" text-anchor="middle">근거 없음 · 개별 판단</text>
+
+      <!-- 화살표 -->
+      <line x1="100" y1="103" x2="124" y2="103" stroke="#1a4fd6" stroke-width="1.6" marker-end="url(#ar)"/>
+      <line x1="234" y1="103" x2="258" y2="103" stroke="#1a4fd6" stroke-width="1.6" marker-end="url(#ar)"/>
+      <line x1="368" y1="103" x2="392" y2="103" stroke="#1a4fd6" stroke-width="1.6" marker-end="url(#ar)"/>
+      <path d="M502,95 L516,95 L516,68 L526,68" fill="none" stroke="#1a4fd6" stroke-width="1.6" marker-end="url(#ar)"/>
+      <path d="M502,111 L516,111 L516,134 L526,134" fill="none" stroke="#e05a2b" stroke-width="1.6" marker-end="url(#aro)"/>
+
+      <!-- 환류 -->
+      <rect x="128" y="186" width="372" height="50" rx="6" fill="#0b2a7a"/>
+      <text x="314" y="206" font-size="10" fill="#fff" text-anchor="middle" font-weight="bold">질문 로그 분석 → 모호 조항 진단 → 학칙 개정 제안</text>
+      <text x="314" y="223" font-size="7.8" fill="#a9c2f5" text-anchor="middle">같은 질문이 반복된다는 것은 규정이 불명확하다는 신호입니다</text>
+
+      <path d="M582,156 L582,211 L506,211" fill="none" stroke="#e05a2b" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#aro)"/>
+      <path d="M128,211 L52,211 L52,130" fill="none" stroke="#e05a2b" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#aro)"/>
+      <text x="76" y="180" font-size="7.5" fill="#c2410c" font-weight="bold">규정이 개선되어</text>
+      <text x="76" y="191" font-size="7.5" fill="#c2410c" font-weight="bold">질문이 줄어듭니다</text>
+    </g>
+  </svg>
+
+  <h3>이 구조의 핵심은 아래쪽 점선입니다</h3>
+  <p>
+    윗줄(파란 흐름)만 있으면 <b>단순한 FAQ 챗봇</b>입니다. 본 제안이 제도 개선안인 이유는 아랫줄
+    때문입니다. <b>답변하지 못한 질문, 반복해서 되묻는 질문, 조건을 오해한 질문이 모두 기록되어
+    규정의 어느 문장이 문제인지를 가리킵니다.</b> 학사팀은 그 신호를 받아 조항을 고치고,
+    조항이 고쳐지면 그 질문 자체가 사라집니다.
+  </p>
+  <p>
+    챗봇은 질문에 <b>대응</b>하지만, 규정 개정은 질문을 <b>소멸</b>시킵니다.
+    전자는 운영이고 후자가 제도 개선입니다. 두 가지를 한 시스템에 묶는 것이 본 제안입니다.
+  </p>
+  <div class="pagenum">8</div>
+</div>
+
+<!-- ============ 9. 도입 방안 ============ -->
+<div class="page">
+  <div class="runhead">AI 활용 학사제도 개선 아이디어 공모전</div>
+  <h2 class="ptitle">도입 방안
+    <small>어떻게 작게 시작해서 검증할 것인가</small></h2>
+
+  <p>
+    전면 도입은 위험합니다. <b>오답의 책임 범위가 정해지지 않은 상태에서 전 학사 영역을 열면,
+    시스템 자체가 새로운 분쟁의 원인</b>이 됩니다. 범위를 좁혀 시작하고, 정확도가 확인된
+    영역부터 넓히는 방식을 제안합니다.
+  </p>
+
+  <table>
+    <tr><th style="width:14%">단계</th><th style="width:26%">범위</th><th>검증 항목</th></tr>
+    <tr>
+      <td class="em">1단계<br><span class="fine">시범</span></td>
+      <td><b>수강신청·다전공</b> 2개 영역<br><span class="fine">규정이 문서로 확정되어 있어 근거 검증이 쉬운 영역</span></td>
+      <td>답변 정확도, 근거 조항 적합성, 답변 불가 비율<br><span class="fine">학사팀이 표본을 직접 검수해 오답을 계측</span></td>
+    </tr>
+    <tr>
+      <td class="em">2단계<br><span class="fine">확대</span></td>
+      <td><b>성적·학사안내</b> 추가<br><span class="fine">수강신청 기간에 맞춰 부하 검증</span></td>
+      <td>피크 시간대 응답성, 재질문률 감소 여부</td>
+    </tr>
+    <tr>
+      <td class="em">3단계<br><span class="fine">연동·환류</span></td>
+      <td><b>학사정보시스템 + 수강신청 시스템 연동</b><br><span class="fine">학번·전공 유형·추가 신청 사항에 더해 <b>현재 신청 학점, 강좌별 이수제한, 여석</b>까지 조회해야 "이 수업을 지금 신청할 수 있는가"에 답할 수 있습니다.</span><br><b>+ 모호 조항 진단표 정기 보고</b></td>
+      <td>개정 전후 <b>동일 질문 발생량 변화</b><br><span class="fine">제도 개선 효과의 직접 지표</span></td>
+    </tr>
+  </table>
+
+  <h3>운영상 반드시 함께 정해야 할 것</h3>
+  <ul>
+    <li><b>책임 범위의 명문화</b> — AI 답변은 <b>안내이며 최종 유권해석이 아님</b>을 화면과 이용약관에 명시합니다. 학적변동·졸업사정은 담당 부서 확인을 의무화합니다.</li>
+    <li><b>규정 갱신 연동</b> — 학칙이 개정되면 저장소가 즉시 갱신되어야 합니다. <b>갱신되지 않은 규정으로 답하는 것은 익명 커뮤니티와 같은 오류</b>이므로, 문서 버전과 게시일을 답변에 함께 표시합니다.</li>
+    <li><b>개인정보 보호</b> — 학번·성적 등 식별 정보는 답변 조건 판정에만 사용하고 <b>로그에는 저장하지 않습니다.</b> 분석용 로그는 질문 텍스트와 조항 식별자만 보관합니다.</li>
+    <li><b>교내 구축 우선 검토</b> — 학사 데이터의 외부 전송을 피하기 위해 <b>오픈 웨이트 모델의 온프레미스 운영</b>을 우선 검토합니다. 선행 연구에서 비용 효율성이 확인된 방식입니다.</li>
+  </ul>
+
+  <h3>성과 측정 지표</h3>
+  <div class="stat">
+    <div><div class="v">정확도</div><div class="l">표본 검수 기준<br>근거 조항 일치율</div></div>
+    <div><div class="v">재질문률</div><div class="l">같은 학생이 같은 취지로<br>다시 묻는 비율</div></div>
+    <div><div class="v">개정 건수</div><div class="l">진단표를 근거로<br>실제 개정된 조항 수</div></div>
+    <div><div class="v">질문 소멸</div><div class="l">개정 후 해당 질문<br>발생량 감소폭</div></div>
+  </div>
+  <p class="fine">
+    마지막 두 지표가 본 제안의 고유 지표입니다. 일반적인 챗봇은 응답 건수로 성과를 주장하지만,
+    본 시스템은 <b>질문이 줄어드는 것을 성과로 삼습니다.</b>
+  </p>
+  <div class="pagenum">9</div>
+</div>
+
+<!-- ============ 10. AI 활용 명시 ============ -->
+<div class="page tight t10">
+  <div class="runhead">AI 활용 학사제도 개선 아이디어 공모전</div>
+  <h2 class="ptitle">AI 활용 도구 · 주요 결과 · 한계
+    <small>공모 요강 필수 기재 항목</small></h2>
+
+  <h3>활용 도구</h3>
+  <table>
+    <tr><th style="width:26%">도구</th><th style="width:30%">활용 목적</th><th>구체적 사용 내역</th></tr>
+    <tr><td class="em">대화형 LLM<br><span class="fine">(Claude)</span></td><td>문제 정의 구조화 및 제안서 작성</td><td>문제 논리 구성, 반론 점검, 본 제안서 초안 작성 및 편집</td></tr>
+    <tr><td class="em">웹 검색 · 브라우저 자동화</td><td>근거 자료 수집</td><td>포털 수강신청 안내문 전문 수집(접힌 항목 95개 자동 전개 후 추출), 게시판 실태 조사, 선행 연구 확인</td></tr>
+    <tr><td class="em">문서 분석 스크립트<br><span class="fine">(Python)</span></td><td>학칙 원문 계량 분석</td><td>학칙 PDF 61쪽 텍스트 추출 → 조문 단위 분해 → 위임·단서·재량 표현 빈도 측정 및 조항별 순위 산출</td></tr>
+    <tr><td class="em">문서 자동 생성</td><td>결과물 제작</td><td>HTML 기반 지면 구성 후 PDF 자동 렌더링(도식·화면 설계 포함)</td></tr>
+  </table>
+
+  <h3>주요 결과</h3>
+  <ul>
+    <li>학사 문의 문제를 <b>"정보 부족"이 아니라 "응답 가능 시간의 공백 + 규정 문장의 모호성"</b>이라는 두 층위로 재정의했습니다.</li>
+    <li>학칙 전문 61쪽을 분석해 <b>87개 조문 중 타 규정 위임 60건, 단서 조항 71건</b>을 계측하고, 학생 관련 조항의 <b>모호성 진단표</b>를 산출했습니다.</li>
+    <li>포털 수강안내 게시판에서 <b>25건 중 ERICA 학부 해당 1건, 지난 연도 안내문 다수 혼재</b>를 확인했습니다.</li>
+    <li>2026-2학기 수강신청 안내문 전문(31,597자)을 확보해 <b>학칙의 20학점 규정과 실제 상한(18~23학점)이 어긋나는 사례</b>를 특정했습니다.</li>
+    <li>근거 기반(RAG) 설계가 <b>환각률을 31.7%에서 6.6%로 낮춘</b> 선행 연구를 확인하여, 설계 원칙의 타당성을 뒷받침했습니다.</li>
+    <li>챗봇 운영에서 끝나지 않고 <b>질문 로그를 규정 개정 근거로 환류시키는 구조</b>를 설계했습니다.</li>
+  </ul>
+
+  <h3>한계 — 솔직히 밝힙니다</h3>
+  <div class="callout warn">
+    <b>① 규정은 분석했으나, 문의 로그는 확보하지 못했습니다.</b><br>
+    학칙 원문 분석(5쪽)과 포털 게시판 실태 조사(3쪽)는 <b>실제로 수행한 결과</b>입니다.
+    그러나 <b>학사팀에 접수되는 문의 로그에는 접근 권한이 없어</b>, 어떤 질문이 실제로 몇 건
+    들어오는지는 측정하지 못했습니다. 3쪽의 시간대 곡선은 <b>수강신청·정정 일정에 근거한 가정치</b>이며
+    실측값이 아닙니다. 학사팀 협조 시 5쪽의 절차를 그대로 적용해 즉시 실측이 가능합니다.
+  </div>
+  <ul>
+    <li><b>② 환각을 0으로 만들 수는 없습니다.</b> 근거 기반 설계로도 오답 가능성은 남습니다. 그래서 본 제안은 되돌릴 수 없는 사안을 AI 응답 범위에서 <b>의도적으로 제외</b>했습니다. 이는 기술적 한계를 제도적 설계로 보완한 것입니다.</li>
+    <li><b>③ 규정 원문의 품질에 의존합니다.</b> 저장소의 규정이 최신이 아니면 시스템도 틀립니다. 따라서 <b>규정 갱신 프로세스가 시스템 도입의 선행 조건</b>입니다.</li>
+    <li><b>④ 익명 커뮤니티를 대체하지는 못합니다.</b> 학생이 커뮤니티를 찾는 데에는 익명성과 접근성이라는 이유도 있습니다. 본 시스템의 목표는 커뮤니티를 없애는 것이 아니라, <b>규정에 근거한 답이 필요한 질문에 대해 더 나은 선택지를 제공</b>하는 것입니다.</li>
+    <li><b>⑤ 구현은 설계 단계입니다.</b> 본 제안서는 화면과 구조 설계까지를 범위로 하며, 실제 시스템 구축에는 학사팀의 규정 데이터 제공과 교내 인프라 협의가 필요합니다.</li>
+  </ul>
+
+  <h3>참고 자료</h3>
+  <p class="fine">
+    · ERICA 학사안내 — 「다중전공」, 「전공학점 인정받는 다전공 학과의 전공기초」, 「수강신청유의사항」 (ehaksa.hanyang.ac.kr)<br>
+    · 한국지능정보사회진흥원(NIA), 「검색증강생성(RAG) 기술의 등장과 발전 동향」<br>
+    · proFILL: 프로필 인지형 검색 증강 대학 학사 상담 챗봇(hoBIT) 연구<br>
+    · 대학 이해관계자를 위한 다중 모드 챗 어시스턴트 개발 방안: RAG 기반 접근법
+  </p>
+
+  <div class="callout" style="margin-top:2mm">
+    <b>학생의 경험이 제도가 됩니다.</b><br>
+    새벽 3시에 던져진 질문 하나하나가 기록되고 분석되어, 학칙의 어느 문장을 고쳐야 하는지를
+    가리킵니다. 본 제안은 그 경로를 만드는 일입니다.
+  </div>
+  <div class="pagenum">10</div>
+</div>
+
+</body>
+</html>
