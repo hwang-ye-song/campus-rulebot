@@ -112,12 +112,15 @@
   .flowstrip{width:100%;margin:2mm 0 3mm}
   .cap{font-size:8pt;color:#6b7a94;margin-top:1.2mm;line-height:1.45}
   .cap b{color:#0b2a7a}
-  .t10 p, .t10 li { font-size:8.9pt; line-height:1.47; }
-  .t10 li { margin-bottom:0.9mm; }
-  .t10 h3 { margin:2.6mm 0 1.2mm; }
-  .t10 .callout { padding:2.6mm 3.5mm; font-size:9pt; margin:1.8mm 0; }
-  .t10 .fine { font-size:7.6pt; line-height:1.42; }
-  .t10 ul { margin:0.8mm 0 1.5mm 5mm; }
+  .t10 p, .t10 li { font-size:8.4pt; line-height:1.44; }
+  .t10 li { margin-bottom:0.7mm; }
+  .t10 h3 { margin:2.2mm 0 1mm; font-size:10.4pt; }
+  .t10 .callout { padding:2.3mm 3.2mm; font-size:8.5pt; margin:1.5mm 0; }
+  .t10 .fine { font-size:7.3pt; line-height:1.4; }
+  .t10 ul { margin:0.7mm 0 1.2mm 4.5mm; }
+  .t10 table { font-size:8pt; margin:1.5mm 0; }
+  .t10 th, .t10 td { padding:1.4mm 1.8mm; }
+  .t10 .ptitle { font-size:17pt; padding-bottom:2.4mm; margin-bottom:3.6mm; }
 </style>
 </head>
 <body>
@@ -723,7 +726,8 @@
     <li><b>② 환각을 0으로 만들 수는 없습니다.</b> 근거 기반 설계로도 오답 가능성은 남습니다. 그래서 본 제안은 되돌릴 수 없는 사안을 AI 응답 범위에서 <b>의도적으로 제외</b>했습니다. 이는 기술적 한계를 제도적 설계로 보완한 것입니다.</li>
     <li><b>③ 규정 원문의 품질에 의존합니다.</b> 저장소의 규정이 최신이 아니면 시스템도 틀립니다. 따라서 <b>규정 갱신 프로세스가 시스템 도입의 선행 조건</b>입니다.</li>
     <li><b>④ 익명 커뮤니티를 대체하지는 못합니다.</b> 학생이 커뮤니티를 찾는 데에는 익명성과 접근성이라는 이유도 있습니다. 본 시스템의 목표는 커뮤니티를 없애는 것이 아니라, <b>규정에 근거한 답이 필요한 질문에 대해 더 나은 선택지를 제공</b>하는 것입니다.</li>
-    <li><b>⑤ 구현은 설계 단계입니다.</b> 본 제안서는 화면과 구조 설계까지를 범위로 하며, 실제 시스템 구축에는 학사팀의 규정 데이터 제공과 교내 인프라 협의가 필요합니다.</li>
+    <li><b>⑤ 구현은 설계 단계입니다.</b> 프로토타입은 동작하지만, 실제 도입에는 학사팀의 규정 데이터 제공과 <b>학사정보시스템·수강신청 시스템 연동</b>이 필요합니다.</li>
+    <li><b>⑥ 현재 권한 설정은 공개 시연용입니다.</b> 저장소는 <b>읽기 전용</b>으로 제한해 규정 데이터의 수정·삭제를 차단하고, 질문 접수만 열어 두었습니다. 실제 운영에서는 <b>로그인 기반으로 관리자와 학생 권한을 분리</b>해 학사팀만 규정을 갱신하도록 설계했습니다. <b>규정 갱신 권한이 통제되지 않으면 답변의 신뢰도가 곧바로 무너지므로, 이 분리는 부가 기능이 아니라 도입의 전제 조건입니다</b>(위 ③ 참조).</li>
   </ul>
 
   <h3>참고 자료</h3>
