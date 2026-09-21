@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "npm --prefix prototype-react install",
+  "buildCommand": "npm --prefix prototype-react run build",
+  "outputDirectory": "prototype-react/dist",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
