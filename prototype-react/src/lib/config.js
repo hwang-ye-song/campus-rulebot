@@ -84,7 +84,10 @@ export function useSettings() {
   const [apiKey, setApiKey] = usePersistentState('oa_key', '')
   const [model, setModel] = usePersistentState('oa_model', MODELS[0].id)
   const [embModel, setEmbModel] = usePersistentState('emb_model', 'text-embedding-3-small')
-  const [useEdge, setUseEdge] = usePersistentState('use_edge', '0')
+  // 배포 시연에서는 Edge Function 경유를 기본값으로 켭니다.
+  // 처음 접속한 사람이 아무 설정 없이 바로 질문할 수 있어야 하고,
+  // 이 경로는 OpenAI 키가 서버 시크릿에만 있어 노출 위험도 없습니다.
+  const [useEdge, setUseEdge] = usePersistentState('use_edge', '1')
   const [sbUrl, setSbUrl] = usePersistentState('sb_url', DEFAULT_SB_URL)
   const [sbKey, setSbKey] = usePersistentState('sb_key', DEFAULT_SB_KEY)
   const [prompt, setPrompt] = usePersistentState('sys_prompt', DEFAULT_PROMPT)
