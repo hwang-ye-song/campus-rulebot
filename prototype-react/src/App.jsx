@@ -92,7 +92,7 @@ export default function App() {
   return (
     <div className="app">
       <header className="hd">
-        <h1>새벽 3시의 <span>학사팀</span></h1>
+        <h1>한양 <span>챗봇</span></h1>
         <div className="sub">학칙을 근거로만 답하는 ERICA 학사 상담 AI</div>
         <div className="kbinfo">
           지식베이스 <b>{kb.length}</b>개 조각 · {hasVectors ? '벡터 검색' : kbMode}

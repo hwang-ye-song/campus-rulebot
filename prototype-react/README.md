@@ -1,4 +1,4 @@
-# 새벽 3시의 학사팀
+# 한양 챗봇
 
 학칙을 근거로만 답하는 ERICA 학사 상담 AI — 2026 AI 활용 학사제도 개선 아이디어 공모전 프로토타입.
 
@@ -34,7 +34,7 @@ npm run dev
 
 ### 1. 직접 호출 (시연용)
 
-「학생 화면 → 설정」에 OpenAI API 키를 입력합니다.
+「지식베이스 구축 → 모델 호출 설정」에서 Edge Function 경유를 끄고 OpenAI API 키를 입력합니다.
 키는 **이 브라우저의 localStorage에만** 저장되며 코드에 포함되지 않습니다.
 발표장에서 빠르게 보여줄 때 쓰기 좋지만, **공개 배포에는 쓰지 마세요.**
 
@@ -47,7 +47,7 @@ supabase functions deploy ask --no-verify-jwt
 supabase secrets set OPENAI_API_KEY=sk-...
 ```
 
-그다음 「설정 → Edge Function 경유」를 켜면 API 키 입력칸이 사라집니다.
+앱은 **Edge Function 경유가 기본값으로 켜져 있어** 처음 접속한 사람도 설정 없이 바로 질문할 수 있습니다.
 
 > 대시보드에서 함수를 만들 때는 **Verify JWT 옵션을 꺼야** 합니다. 켜져 있으면 401이 납니다.
 
@@ -59,8 +59,18 @@ SQL Editor에서 [`supabase/schema.sql`](supabase/schema.sql)을 실행하세요
 질문 로그에는 **학번·성명을 저장하지 않습니다.** 질문 텍스트, 캠퍼스, 학년, 답변 가능 여부,
 연결된 조항만 남습니다.
 
-> ⚠️ `schema.sql`의 RLS 정책은 데모용으로 **누구나 읽고 쓸 수 있게** 열려 있습니다.
-> 공개 배포 시에는 반드시 인증된 사용자로 제한하거나, 발표가 끝나면 프로젝트를 내리세요.
+> ⚠️ `schema.sql`의 정책은 **지식베이스 업로드용으로 쓰기가 열린 상태**입니다.
+> 업로드를 마친 뒤에는 아래처럼 읽기 전용으로 조이세요. 현재 배포본은 이 상태입니다.
+>
+> ```sql
+> drop policy if exists "kb public"  on kb_chunk;
+> drop policy if exists "log public" on question_log;
+> create policy "kb read"    on kb_chunk     for select using (true);
+> create policy "log insert" on question_log for insert with check (true);
+> create policy "log read"   on question_log for select using (true);
+> ```
+>
+> 운영 시에는 로그인 기반으로 관리자와 학생 권한을 분리해야 합니다.
 
 ## Vercel 배포
 

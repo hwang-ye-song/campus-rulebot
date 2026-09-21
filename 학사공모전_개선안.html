@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>새벽 3시의 학사팀</title>
+<title>한양 챗봇</title>
 <style>
   @page { size: A4; margin: 0; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -112,14 +112,15 @@
   .flowstrip{width:100%;margin:2mm 0 3mm}
   .cap{font-size:8pt;color:#6b7a94;margin-top:1.2mm;line-height:1.45}
   .cap b{color:#0b2a7a}
-  .t10 p, .t10 li { font-size:8.4pt; line-height:1.44; }
+  .t10 p, .t10 li { font-size:8pt; line-height:1.4; }
   .t10 li { margin-bottom:0.7mm; }
   .t10 h3 { margin:2.2mm 0 1mm; font-size:10.4pt; }
-  .t10 .callout { padding:2.3mm 3.2mm; font-size:8.5pt; margin:1.5mm 0; }
+  .t10 .callout { padding:2mm 3mm; font-size:8.1pt; margin:1.3mm 0; }
   .t10 .fine { font-size:7.3pt; line-height:1.4; }
   .t10 ul { margin:0.7mm 0 1.2mm 4.5mm; }
-  .t10 table { font-size:8pt; margin:1.5mm 0; }
-  .t10 th, .t10 td { padding:1.4mm 1.8mm; }
+  .t10 table { font-size:7.5pt; margin:1.2mm 0; }
+  .t10 th, .t10 td { padding:1.1mm 1.5mm; line-height:1.38; }
+  .t10 .fine { font-size:6.9pt; }
   .t10 .ptitle { font-size:17pt; padding-bottom:2.4mm; margin-bottom:3.6mm; }
 </style>
 </head>
@@ -131,7 +132,7 @@
     <div class="top">2026학년도 AI 활용 학사제도 개선 아이디어 공모전</div>
   </div>
   <div>
-    <h1>새벽 3시의<br><em>학사팀</em></h1>
+    <h1>한양<br><em>챗봇</em></h1>
     <div class="line"></div>
     <div class="sub">
       학생의 질문은 밤에 생기는데,<br>
@@ -692,16 +693,24 @@
 <!-- ============ 10. AI 활용 명시 ============ -->
 <div class="page tight t10">
   <div class="runhead">AI 활용 학사제도 개선 아이디어 공모전</div>
-  <h2 class="ptitle">AI 활용 도구 · 주요 결과 · 한계
+  <h2 class="ptitle">AI 적용 과정 · 활용 도구 · 주요 결과 · 한계
     <small>공모 요강 필수 기재 항목</small></h2>
 
-  <h3>활용 도구</h3>
+  <h3>AI 적용 과정과 활용 도구 — 문제 발굴부터 시제품 구현까지</h3>
   <table>
-    <tr><th style="width:26%">도구</th><th style="width:30%">활용 목적</th><th>구체적 사용 내역</th></tr>
-    <tr><td class="em">대화형 LLM<br><span class="fine">(Claude)</span></td><td>문제 정의 구조화 및 제안서 작성</td><td>문제 논리 구성, 반론 점검, 본 제안서 초안 작성 및 편집</td></tr>
-    <tr><td class="em">웹 검색 · 브라우저 자동화</td><td>근거 자료 수집</td><td>포털 수강신청 안내문 전문 수집(접힌 항목 95개 자동 전개 후 추출), 게시판 실태 조사, 선행 연구 확인</td></tr>
-    <tr><td class="em">문서 분석 스크립트<br><span class="fine">(Python)</span></td><td>학칙 원문 계량 분석</td><td>학칙 PDF 61쪽 텍스트 추출 → 조문 단위 분해 → 위임·단서·재량 표현 빈도 측정 및 조항별 순위 산출</td></tr>
-    <tr><td class="em">문서 자동 생성</td><td>결과물 제작</td><td>HTML 기반 지면 구성 후 PDF 자동 렌더링(도식·화면 설계 포함)</td></tr>
+    <tr><th style="width:17%">단계</th><th style="width:23%">활용 도구</th><th>구체적 내용</th></tr>
+    <tr><td class="em">① 문제 발굴·정의</td><td>대화형 LLM (Claude)</td>
+      <td>학생 경험에서 출발한 문제를 <b>"응답 가능 시간의 공백 + 규정 문장의 모호성"</b> 두 층위로 재정의하고, 반론을 점검</td></tr>
+    <tr><td class="em">② 문제 분석<br><span class="fine">(활용범위 ①)</span></td><td>Python 분석 스크립트</td>
+      <td>학칙 PDF 61쪽 텍스트 추출 → 조문 단위 분해 → <b>위임 60건·단서 71건 계량</b> 및 조항별 모호성 순위 산출</td></tr>
+    <tr><td class="em">③ 자료 수집</td><td>브라우저 자동화 · 웹 검색</td>
+      <td>포털 수강신청 안내문 전문 수집(<b>접힌 항목 95개 자동 전개 후 31,597자 추출</b>), 게시판 실태 조사, 선행 연구 확인</td></tr>
+    <tr><td class="em">④ 아이디어 구체화</td><td>대화형 LLM (Claude)</td>
+      <td>설계 3원칙 도출, 답변 불가 시 인계 경로 설계, <b>환각을 억제하는 시스템 프롬프트</b> 작성</td></tr>
+    <tr><td class="em">⑤ 시제품 구현<br><span class="fine">(활용범위 ②)</span></td><td>OpenAI API<br><span class="fine">gpt-5.6-luna<br>text-embedding-3-small</span><br>React · Supabase</td>
+      <td>규정 <b>261개 조각 임베딩 → 벡터 검색 → 근거 기반 답변 생성</b>. Edge Function으로 API 키를 서버에 격리하고, 질문 로그를 진단표로 집계</td></tr>
+    <tr><td class="em">⑥ 시각화·결과물</td><td>문서 자동 생성</td>
+      <td>HTML 기반 지면 구성 후 PDF 자동 렌더링 — 도식, 진단표, 프로토타입 화면 포함</td></tr>
   </table>
 
   <h3>주요 결과</h3>
@@ -739,9 +748,8 @@
   </p>
 
   <div class="callout" style="margin-top:2mm">
-    <b>학생의 경험이 제도가 됩니다.</b><br>
-    새벽 3시에 던져진 질문 하나하나가 기록되고 분석되어, 학칙의 어느 문장을 고쳐야 하는지를
-    가리킵니다. 본 제안은 그 경로를 만드는 일입니다.
+    <b>학생의 경험이 제도가 됩니다.</b> 새벽 3시에 던져진 질문 하나하나가 기록되고 분석되어,
+    학칙의 어느 문장을 고쳐야 하는지를 가리킵니다. 본 제안은 그 경로를 만드는 일입니다.
   </div>
   <div class="pagenum">10</div>
 </div>
